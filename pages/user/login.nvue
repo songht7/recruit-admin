@@ -1,0 +1,226 @@
+<template>
+	<view class="user-login">
+		<block v-if="pageIs==''||pageIs=='phone'">
+			<view class="login-block">
+				<view class="login-label"><text class="label">绑定关联手机号</text></view>
+				<view class="login-input">
+					<input class="user-input" type="number" v-model="formData['phone']" placeholder="您的手机号" />
+				</view>
+				<view class="login-btns">
+					<view class="login-btn" @click="loginStep('code')">下一步</view>
+				</view>
+			</view>
+		</block>
+		<block v-if="pageIs=='code'">
+			<view class="login-block">
+				<view class="login-label">
+					<text class="label">输入短信验证码</text>
+					<text class="sub-label">已向您的手机发送验证码</text>
+				</view>
+				<view class="login-input">
+					<view class="f-row f-row-ipt">
+						<input :class="['cruise-input','bin-code-ipt']" type="text" :maxlength="list.length" @input="onInput($event)"
+						 @blur="onBlur" v-model="formData['code']" placeholder="" />
+						<view class="f-row-code">
+							<text v-for="(o, i) in list" :key="i" :class="{'focus': o.fs}" v-text="o.val" /></text>
+						</view>
+					</view>
+				</view>
+				<view class="login-btns">
+					<view class="login-btn login-btn-helf prev" @click="loginStep('phone')">上一步</view>
+					<view class="login-btn login-btn-helf" @click="loginStep('')">下一步</view>
+				</view>
+			</view>
+		</block>
+	</view>
+</template>
+
+<script>
+	var graceChecker = require("@/common/graceChecker.js");
+	export default {
+		data() {
+			return {
+				title: '关联手机号',
+				pageIs: 'phone',
+				formData: {
+					phone: '',
+					code: ''
+				},
+				list: [{
+						val: '',
+						fs: true
+					},
+					{
+						val: '',
+						fs: false
+					},
+					{
+						val: '',
+						fs: false
+					},
+					{
+						val: '',
+						fs: false
+					}
+				]
+			}
+		},
+		onLoad() {
+
+		},
+		onShow() {
+			var that = this;
+		},
+		methods: {
+			onBlur() {
+				uni.pageScrollTo({
+					scrollTop: 0,
+					duration: 0
+				})
+			},
+			loginStep(val) {
+				var that = this;
+				if (val) {
+					that.pageIs = val;
+				}
+				console.log(that.formData)
+			},
+			onInput(e) {
+				var that = this;
+				const l = e.target.value.length;
+				for (let i = 0; i < that.list.length; i++) {
+					that.list[i].fs = false;
+					that.list[i].val = e.target.value[i];
+				};
+				if (l) {
+					that.list[l - 1].fs = true;
+					that.binInputHide = 0;
+				} else {
+					that.binInputHide = 1;
+				}
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.user-login {
+		padding: 100rpx 30rpx 30rpx;
+	}
+
+	.login-block {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.login-label {
+		line-height: 1.6;
+		padding-bottom: 20rpx;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.label {
+		font-size: 70rpx;
+		color: #000;
+	}
+
+	.sub-label {
+		font-size: 42rpx;
+		color: #848383;
+	}
+
+	.login-input {
+		padding: 100rpx 0 200rpx;
+	}
+
+	.user-input {
+		width: 100%;
+		border-bottom: 2rpx solid #eee;
+		line-height: 3;
+		font-size: 40rpx;
+		color: #000000;
+	}
+
+	.login-btns {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	.login-btn {
+		width: 100%;
+		background: #3a78ea;
+		border-radius: 10rpx;
+		line-height: 2;
+		border: 2rpx solid #3a78ea;
+		color: #FFFFFF;
+		font-size: 50rpx;
+		display: flex;
+		align-items: center;
+		align-content: center;
+		justify-content: center;
+	}
+
+	.login-btn-helf {
+		width: 48%;
+	}
+
+	.prev {
+		background: none;
+		color: #3a78ea;
+	}
+
+	.f-row {
+		background: #FFFFFF;
+		color: #666666;
+		position: relative;
+	}
+
+	.cruise-input {
+		line-height: 1.4;
+		padding: 30rpx;
+		text-align: center;
+		font-size: 38rpx;
+	}
+
+	.bin-code-ipt {
+		font-size: 32rpx;
+		color: #FFFFFF;
+		opacity: 0;
+		background: none;
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 1;
+		padding: 0;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+	}
+
+	.f-row-code {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		width: 100%;
+	}
+
+	.f-row-code text {
+		width: 100rpx;
+		height: 100rpx;
+		line-height: 1.4;
+		border: none;
+		border-bottom: 2rpx solid #b2bfbd;
+		text-align: center;
+		color: #4c4e60;
+		font-size: 44rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.f-row-code text.focus {
+		border-color: #354e70;
+	}
+</style>
