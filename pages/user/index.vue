@@ -5,27 +5,35 @@
 				<uni-icons class="build-btn" type="shezhi" :size="32" color="#fff" @click="userBuild"></uni-icons>
 			</view>
 			<view class="user-info">
-				<view class="user-info-left">
-					<view class="user-name" @click="userBinding">用户名</view>
-					<view class="user-resume-build" @click="resumeBtn">
-						<view class="reume-label">我的在线简历</view>
-					</view>
-				</view>
-				<view class="user-info-right">
+				<view class="user-info"  @click="">
 					<view class="portrait">
 						<image v-if="portrait" class="portrait-img" src="../../static/logo.png" mode="aspectFit"></image>
 						<uni-icons v-else class="portrait-img" type="touxiang1" size="75"></uni-icons>
+					</view>
+					<view class="user-ovs">
+						<view class="user-name">用户名</view>
+						<view class="user-sub-ov">
+							<view class="reume-label">HR</view>
+						</view>
 					</view>
 				</view>
 			</view>
 			<view class="reume-count">
 				<view class="count-block">
 					<view class="count-numb">1</view>
-					<view class="count-label">近一月</view>
+					<view class="count-label">简历</view>
 				</view>
 				<view class="count-block">
-					<view class="count-numb">10</view>
-					<view class="count-label">投递总数</view>
+					<view class="count-numb">1</view>
+					<view class="count-label">今日新增</view>
+				</view>
+				<view class="count-block">
+					<view class="count-numb">1</view>
+					<view class="count-label">已导出</view>
+				</view>
+				<view class="count-block">
+					<view class="count-numb">1</view>
+					<view class="count-label">未导出</view>
 				</view>
 			</view>
 		</view>
@@ -49,9 +57,9 @@
 			that.$store.dispatch("cheack_page", 2);
 		},
 		methods: {
-			userBinding(){
+			userBinding() {
 				uni.navigateTo({
-				    url: '/pages/user/login'
+					url: '/pages/user/login'
 				})
 			},
 			userBuild() {},
@@ -83,34 +91,19 @@
 		padding: 30rpx 0;
 	}
 
-	.user-name {
-		font-size: 70rpx;
-		color: #FFFFFF;
-	}
-
-	.user-resume-build {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		align-content: center;
-	}
-
-	.reume-label {
+	.user-ovs {
+		padding-left: 30rpx;
 		font-size: 40rpx;
 		color: #FFFFFF;
 	}
 
-	.reume-label:before {
-		font-family: "uniicons" !important;
-		content: "\ec89";
-		padding-right: 8rpx;
-		color: inherit;
-		height: inherit;
+	.reume-label {
+		font-size: 30rpx;
 	}
 
 	.portrait {
-		width: 150rpx;
-		height: 150rpx;
+		width: 120rpx;
+		height: 120rpx;
 		border-radius: 50%;
 		overflow: hidden;
 	}
@@ -141,5 +134,4 @@
 	.count-numb {
 		font-size: 50rpx;
 	}
-	
 </style>

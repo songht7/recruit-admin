@@ -39,6 +39,18 @@
 				}
 			}
 		}, {
+			"path": "pages/company/share",
+			"style": {
+				"navigationBarTitleText": "fx",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
+		}, {
 			"path": "pages/user/index",
 			"style": {
 				"navigationBarTitleText": "我的",

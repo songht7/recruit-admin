@@ -1,11 +1,11 @@
 /*
  *	'dev',    	//开发版
  *	'trial',    //体验版
- *	'release',  //正式版
+ *	'prod',  //正式版
  * */
 
 var api = {
-	"release": {
+	"prod": {
 		"interface": "https://api.bdmartech.com", //接口
 		"domain": "http://m.bdmartech.com",
 		"appName": "人力资源",
@@ -48,8 +48,10 @@ export default {
 		"appName": api[lks]["appName"],
 		"phoneNumber": api[lks]["phoneNumber"],
 		"addr": {
-			"getBasePhone": "/v4/ApiBase-phone.htm", //获取客服电话
-			"slideShow": "/v2/ApiHome-slideShow.htm", //首页列表
+			"getRegion": "/v2/ApiEnum-getRegion.htm", //获取中国地区的接口
+			"screening": "/v4/ApiBase-screening.htm", //筛选条件列表
+			
+			"weChatAuth": "/v4/ApiAuth-signWithWeChatAuthAuthorize.htm", //获取b端用户微信授权后的用户信息?code=1
 		}
 	}
 }

@@ -58,11 +58,19 @@
 					checkType: "phoneno",
 					checkRule: "",
 					errorMsg: "请填写正确的手机号"
+				}, {
+					name: "code",
+					checkType: "notnull",
+					checkRule: "",
+					errorMsg: "验证码不能为空"
 				}];
 				let _formData = that.formData;
 				var checkRes = graceChecker.check(_formData, rule);
 				if (checkRes) {
-					that.disbale = false
+					that.disbale = false;
+					uni.navigateTo({
+						url: '/pages/user/index'
+					});
 				} else {
 					that.phoneErr = true;
 					that.disbale = true;
@@ -161,7 +169,8 @@
 		color: #007AFF;
 	}
 
-	.disbale-btn,.loading{
+	.disbale-btn,
+	.loading {
 		color: #666;
 	}
 </style>
