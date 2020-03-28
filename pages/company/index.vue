@@ -53,6 +53,7 @@
 		},
 		onShow() {
 			var that = this;
+			that.$store.dispatch("cheack_user");
 			that.$store.dispatch("menu_default");
 			//that.$store.dispatch("menu_type_1");
 			that.$store.commit("set_company_name", "A公司");

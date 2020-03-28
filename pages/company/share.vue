@@ -62,7 +62,9 @@
 			that.setWebQRcode();
 		},
 		onShow() {
-			this.getBase64Image();
+			var that = this;
+			that.getBase64Image();
+			that.$store.dispatch("cheack_user");
 		},
 		onReady() {
 			var that = this;

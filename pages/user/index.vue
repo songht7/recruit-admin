@@ -2,23 +2,23 @@
 	<view class="content">
 		<view id="UserHeader">
 			<view class="user-build">
-				<uni-icons class="build-btn" type="shezhi" :size="32" color="#fff" @click="userBuild"></uni-icons>
+				<!-- <uni-icons class="build-btn" type="shezhi" :size="32" color="#fff" @click="userBuild"></uni-icons> -->
 			</view>
 			<view class="user-info">
-				<view class="user-info"  @click="">
+				<view class="user-info">
 					<view class="portrait">
-						<image v-if="portrait" class="portrait-img" src="../../static/logo.png" mode="aspectFit"></image>
-						<uni-icons v-else class="portrait-img" type="touxiang1" size="75"></uni-icons>
+						<image v-if="portrait" class="portrait-img" :src="portrait" mode="aspectFit"></image>
+						<uni-icons v-else class="portrait-img" type="touxiang1" size="75" color="#fff"></uni-icons>
 					</view>
 					<view class="user-ovs">
-						<view class="user-name">用户名</view>
+						<view class="user-name">{{UserInfo.enterprise.username}}</view>
 						<view class="user-sub-ov">
-							<view class="reume-label">HR</view>
+							<view class="reume-label">{{UserInfo.enterprise.name}}</view>
 						</view>
 					</view>
 				</view>
 			</view>
-			<view class="reume-count">
+			<!-- <view class="reume-count">
 				<view class="count-block">
 					<view class="count-numb">1</view>
 					<view class="count-label">简历</view>
@@ -35,9 +35,13 @@
 					<view class="count-numb">1</view>
 					<view class="count-label">未导出</view>
 				</view>
-			</view>
+			</view> -->
 		</view>
-		<tab-bar></tab-bar>
+		<view class="job-box">
+			<view class="j-left">在线职位</view>
+			<view class="j-right" @click="jobAction">职位管理</view>
+		</view>
+		<!-- 	<tab-bar></tab-bar> -->
 	</view>
 </template>
 
@@ -46,7 +50,9 @@
 		data() {
 			return {
 				title: '我的',
-				portrait: !false
+				portrait: "",
+				WeChatInfo: {},
+				UserInfo: {}
 			}
 		},
 		onLoad() {
@@ -54,7 +60,18 @@
 		},
 		onShow() {
 			var that = this;
+			that.$store.dispatch("cheack_user");
 			that.$store.dispatch("cheack_page", 2);
+			uni.getStorage({
+				key: "WeChatInfo",
+				success: function(res) {
+					console.log(res.data)
+					that.WeChatInfo = res.data.userError;
+					that.portrait = res.data.userError.headimgurl;
+				},
+				fail() {}
+			})
+			that.UserInfo = that.$store.state.UserInfo;
 		},
 		methods: {
 			userBinding() {
@@ -62,8 +79,11 @@
 					url: '/pages/user/login'
 				})
 			},
-			userBuild() {},
-			resumeBtn() {}
+			jobAction() {
+				uni.navigateTo({
+					url: '/pages/index/index'
+				});
+			}
 		}
 	}
 </script>
@@ -133,5 +153,25 @@
 
 	.count-numb {
 		font-size: 50rpx;
+	}
+
+	.job-box {
+		display: flex;
+		justify-content: space-between;
+		flex-direction: row;
+		align-items: center;
+		align-content: center;
+		padding: 30rpx;
+		line-height: 2;
+	}
+
+	.j-left {
+		color: #595757;
+		font-size: 36rpx;
+	}
+
+	.j-right {
+		color: #aaaaaa;
+		font-size: 30rpx;
 	}
 </style>

@@ -1,127 +1,109 @@
 <template>
 	<view class="content">
 		<block>
-			<view id="Header">
-				<view class="title">{{title}}</view>
-				<view class="search-box">
-					<input class="search-input" v-show="searchShow" :focus="focus" @blur="getData('keyword')" type="text" v-model="keyword"
-					 placeholder="输入搜索关键词" placeholder-style="color:#fff;font-size:32rpx" confirm-type="search" />
-					<uni-icons type="fangdajing1" :size="32" color="#fff" @click="searchBtn"></uni-icons>
+			<view class="job-main">
+				<view class="job-li">
+					<view>
+						<view class="j-title">
+							aaaaaa
+						</view>
+						<view class="j-ov">
+							上海 南京西路 学历不限 应届生
+						</view>
+					</view>
+					<view class="j-tag">
+						免费试用中
+					</view>
 				</view>
 			</view>
 		</block>
-		<block>
-			<filter-box></filter-box>
-		</block>
-		<block>
-			<job-list :list="jobList"></job-list>
-		</block>
-		<tab-bar></tab-bar>
+		<view class="job-add" @click="addJob">
+			发布新职位
+		</view>
+		<!-- <tab-bar></tab-bar> -->
 	</view>
 </template>
 
 <script>
-	import JobList from '@/components/job-list.vue'
-	import FilterBox from '@/components/filter-box.vue'
 	export default {
 		data() {
 			return {
 				title: '职位',
-				pageType: '',
-				keyword: '',
-				searchShow: false,
-				focus: false,
-				jobList: [{
-					id: 1,
-					name: "市场专员",
-					price: "8-13K",
-					overview: "上海XXX事务所",
-					city: "上海",
-					years: "1-3年",
-					edu: "学历不限",
-					comany_name: "上海XX中介公司"
-				}, {
-					id: 2,
-					name: "市场专员2222",
-					price: "8-13K",
-					overview: "上海XXX事务所2",
-					city: "上海",
-					years: "1-3年",
-					edu: "学历不限",
-					comany_name: "上海XX中介公司"
-				}]
+				jobList: []
 			}
 		},
-		components: {
-			JobList,
-			FilterBox
-		},
+		components: {},
 		onLoad(option) {
 			var that = this;
 			console.log("onLoad")
 		},
 		onShow() {
 			var that = this;
+			that.$store.dispatch("cheack_user");
 			that.$store.dispatch("menu_default");
 			that.$store.dispatch("cheack_page", 0);
 		},
 		methods: {
 			getData(type) {
 				var that = this;
-				console.log(that.keyword);
-				if (type == 'keyword' && that.keyword == "") {
-					that.searchShow = false;
-					that.focus = false;
-				}
-			},
-			searchBtn() {
-				var that = this;
-				that.searchShow = !that.searchShow;
-				that.focus = that.searchShow;
-			},
-			onBlur() {
-				uni.pageScrollTo({
-					scrollTop: 0,
-					duration: 0
-				})
 			}
 		}
 	}
 </script>
 
 <style scoped>
-	#Header {
-		background: #3a78ea;
+	.content {
 		padding: 30rpx;
+	}
+
+	.job-main {
+		padding-bottom: 60rpx;
+	}
+
+	.job-li {
 		display: flex;
-		flex-direction: row;
 		justify-content: space-around;
 		align-items: center;
 		align-content: center;
+		flex-direction: row;
+		border-bottom: 1px solid #eaeaea;
+		margin-bottom: 20rpx;
+		padding-bottom: 20rpx;
+	}
+
+	.job-li::after {
+		content: ">";
+		color: #AAAAAA;
+	}
+
+	.j-title {
+		font-size: 36rpx;
+		color: #000000;
+	}
+
+	.j-ov {
+		font-size: 30rpx;
+		color: #aaaaaa;
+	}
+
+	.j-tag {
+		color: #007AFF;
+		padding-right: 10rpx;
+	}
+
+	.job-add {
+		width: 90%;
+		position: fixed;
+		left: 5%;
+		bottom: 30rpx;
 		line-height: 2;
-	}
-
-	.title {
-		font-size: 50rpx;
+		border-radius: 10rpx;
+		background: #007AFF;
 		color: #FFFFFF;
-		width: 50%;
-	}
-
-	.search-box {
-		flex: 1;
+		font-size: 36rpx;
 		display: flex;
-		justify-content: flex-end;
+		justify-content: center;
 		align-items: center;
 		align-content: center;
-		flex-direction: row;
-	}
-
-	.search-input {
-		line-height: 2;
-		width: 100%;
-		padding: 10rpx;
-		border-radius: 5rpx;
-		border-bottom: 2rpx solid #FFFFFF;
-		color: #FFFFFF;
 	}
 </style>

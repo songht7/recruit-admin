@@ -14,7 +14,6 @@ const store = new Vuex.Store({
 		loading: "0",
 		appName: common.Interface.appName,
 		phoneNumber: common.Interface.phoneNumber,
-		user: {},
 		openid: "",
 		wxType: "gzh", //mp:小程序，gzh：公众号
 		data: {},
@@ -27,6 +26,7 @@ const store = new Vuex.Store({
 		companyID: "",
 		page_index: 0,
 		WeChatInfo: {},
+		UserInfo: {},
 		testToken: "071gNw5a0GfslA1o7A5a0kql5a0gNw5B"
 	},
 	mutations: {
@@ -47,7 +47,7 @@ const store = new Vuex.Store({
 		},
 		get_user(state, data) {
 			console.log("store-get_user：", data)
-			state.user = data
+			state.UserInfo = data
 		},
 		update_data(state, data) {
 			state.data = data
@@ -100,38 +100,30 @@ const store = new Vuex.Store({
 			var user = "";
 			var _openid = "";
 			uni.getStorage({
-				key: "user",
+				key: "UserInfo",
 				success: function(res) {
 					user = res.data;
 					let timestamp = Math.round(new Date().getTime() / 1000);
 					//console.log(!user.deathline, timestamp, user.deathline, user.openid, timestamp >= user.deathline)
 					if (!user.deathline || timestamp >= user.deathline) {
-						//console.log("deathline")
-						if (user.openid && user.userType == "3") {
-							//console.log("wx-openid")
-							ctx.dispatch("menu_" + user.tabBarType);
-							ctx.dispatch("wxXCXAuth", 'reCheack');
-						} else {
-							//console.log("removeStorage-user")
-							uni.removeStorage({
-								key: "user"
-							});
-							ctx.dispatch("menu_default");
-							user = {};
-							uni.redirectTo({
-								url: "/pages/index/index"
-							})
-						}
+						uni.removeStorage({
+							key: "UserInfo"
+						});
+						uni.removeStorage({
+							key: "WeChatInfo"
+						});
+						uni.redirectTo({
+							url: "/pages/user/login"
+						})
 					} else {
-						ctx.dispatch("menu_" + user.tabBarType);
 					}
 					ctx.commit("get_user", user)
 				},
 				fail() {
 					ctx.commit("get_user", {})
-					// uni.redirectTo({
-					// 	url: "/pages/index/index"
-					// })
+					uni.redirectTo({
+						url: "/pages/user/login"
+					})
 				}
 			})
 		},

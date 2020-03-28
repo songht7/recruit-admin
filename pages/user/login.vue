@@ -49,11 +49,17 @@
 		},
 		onShow() {
 			var that = this;
+			that.$store.dispatch("cheack_user");
 			uni.getStorage({
 				key: 'WeChatInfo',
 				success: function(res) {
-					console.log("onShow:", res)
-					that.WeChatInfo = res.data.data;
+					console.log("onShow:", res.data)
+					that.WeChatInfo = res.data;
+					if (that.$store.state.UserInfo.id && that.WeChatInfo.openid) {
+						uni.redirectTo({
+							url: "/pages/user/index"
+						})
+					}
 				}
 			});
 		},
@@ -90,9 +96,28 @@
 									icon: "none"
 								});
 							} else {
-								// uni.navigateTo({
-								// 	url: '/pages/user/index'
-								// });
+								uni.setStorage({
+									key: 'UserInfo',
+									data: res.data,
+									success: function() {
+										uni.navigateTo({
+											url: '/pages/user/index'
+										});
+									},
+									fail: function(err) {
+										uni.showToast({
+											title: "获取用户信息失败",
+											icon: "none"
+										});
+									}
+								});
+							}
+						} else {
+							if (res.data.userError == "errorSms") {
+								uni.showToast({
+									title: "验证码错误",
+									icon: "none"
+								});
 							}
 						}
 					};

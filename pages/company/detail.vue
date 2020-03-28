@@ -42,6 +42,7 @@
 		},
 		onShow() {
 			var that = this;
+			that.$store.dispatch("cheack_user");
 		},
 		methods: {}
 	}
