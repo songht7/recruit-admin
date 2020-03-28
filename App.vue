@@ -5,6 +5,11 @@
 		},
 		onShow: function() {
 			console.log('App Show')
+			let isWeixin = !!/micromessenger/i.test(navigator.userAgent.toLowerCase())
+			console.log("isWeixin:", isWeixin)
+			if(isWeixin){
+				this.$store.dispatch("wxXCXAuth")
+			}
 		},
 		onHide: function() {
 			console.log('App Hide')

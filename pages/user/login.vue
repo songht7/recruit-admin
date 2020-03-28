@@ -5,12 +5,11 @@
 				<view class="login-label"><text class="label">管理员登录</text></view>
 
 				<view :class="['login-input',phoneErr?'phone-err':'']">
-					<input class="user-input" type="number" maxlength="11" @focus="onFocus" @blur="checkPhone" placeholder="手机号"
-					 v-model="formData['phone']" />
+					<input class="user-input" type="number" maxlength="11" @focus="onFocus" placeholder="手机号" v-model="formData['phone']" />
 				</view>
 				<view class="login-input">
 					<input class="user-input" type="text" maxlength="6" v-model="formData['code']" placeholder="验证码" />
-					<view :class="['get-code',disbale?'disbale-btn':'',loading?'loading':'']" @click="getCode">获取验证码</view>
+					<view :class="['get-code',seandCode?'loading':'']" @click="getCode">{{seandCode?count+'s 重新获取':'获取验证码'}}</view>
 				</view>
 				<view class="login-btns">
 					<view class="login-btn" @click="login">登录</view>
@@ -22,6 +21,12 @@
 
 <script>
 	var graceChecker = require("@/common/graceChecker.js");
+	const rule = [{
+		name: "phone",
+		checkType: "phoneno",
+		checkRule: "",
+		errorMsg: "请填写正确的手机号"
+	}]
 	export default {
 		data() {
 			return {
@@ -30,10 +35,13 @@
 				disbale: true,
 				phoneErr: false,
 				loading: false,
+				seandCode: false,
+				count: 60,
 				formData: {
 					phone: '',
 					code: ''
-				}
+				},
+				WeChatInfo: {}
 			}
 		},
 		onLoad() {
@@ -41,39 +49,55 @@
 		},
 		onShow() {
 			var that = this;
+			uni.getStorage({
+				key: 'WeChatInfo',
+				success: function(res) {
+					console.log("onShow:", res)
+					that.WeChatInfo = res.data.data;
+				}
+			});
 		},
 		methods: {
 			login(val) {
 				var that = this;
-				console.log(that.formData)
-			},
-			checkPhone() {
-				var that = this;
-				uni.pageScrollTo({
-					scrollTop: 0,
-					duration: 0
-				})
-				var rule = [{
-					name: "phone",
-					checkType: "phoneno",
-					checkRule: "",
-					errorMsg: "请填写正确的手机号"
-				}, {
-					name: "code",
-					checkType: "notnull",
-					checkRule: "",
-					errorMsg: "验证码不能为空"
-				}];
+				var __rule = [...rule,
+					{
+						name: "code",
+						checkType: "notnull",
+						checkRule: "",
+						errorMsg: "验证码不能为空"
+					}
+				];
 				let _formData = that.formData;
-				var checkRes = graceChecker.check(_formData, rule);
+				console.log(that.formData);
+				var checkRes = graceChecker.check(_formData, __rule);
 				if (checkRes) {
-					that.disbale = false;
-					uni.navigateTo({
-						url: '/pages/user/index'
-					});
+					var parm = {
+						inter: "weChatAuth",
+						parm: `?phone=${that.formData.phone}&phoneCode=${that.formData.code}&openid=${that.WeChatInfo.openid}&token=`
+					};
+					parm["fun"] = function(res) {
+						console.log(res)
+						if (res.success) {
+							if (res.data.userError == false) {
+								uni.showToast({
+									title: "该账户未注册管理员",
+									icon: "none"
+								});
+							} else if (res.data == "") {
+								uni.showToast({
+									title: "获取用户信息失败",
+									icon: "none"
+								});
+							} else {
+								// uni.navigateTo({
+								// 	url: '/pages/user/index'
+								// });
+							}
+						}
+					};
+					that.$store.dispatch("getData", parm)
 				} else {
-					that.phoneErr = true;
-					that.disbale = true;
 					uni.showToast({
 						title: graceChecker.error,
 						icon: "none"
@@ -87,9 +111,52 @@
 			},
 			getCode() {
 				var that = this;
-				if (!that.disbale) {
-					that.loading = true;
+				if (that.seandCode) {
+					return
+				}
+				uni.pageScrollTo({
+					scrollTop: 0,
+					duration: 0
+				})
+				var __rule = rule;
+				let _formData = that.formData;
+				var checkRes = graceChecker.check(_formData, __rule);
+				if (checkRes) {
+					that.seandCode = true;
+					that.countDown();
 					console.log(that.formData)
+					var parm = {
+						inter: "sendSms",
+						parm: `?phone=${that.formData.phone}`
+					};
+					parm["fun"] = function(res) {
+						console.log(res)
+						if (res.success) {
+
+						}
+					};
+					that.$store.dispatch("getData", parm)
+				} else {
+					uni.showToast({
+						title: graceChecker.error,
+						icon: "none"
+					});
+				}
+			},
+			countDown() {
+				var that = this;
+				const TIME_COUNT = 60;
+				if (!this.timer) {
+					this.count = TIME_COUNT;
+					this.timer = setInterval(() => {
+						if (this.count > 0 && this.count <= TIME_COUNT) {
+							this.count--;
+						} else {
+							that.seandCode = false;
+							clearInterval(this.timer);
+							this.timer = null;
+						}
+					}, 1000);
 				}
 			}
 		}
