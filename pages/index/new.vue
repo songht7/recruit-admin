@@ -52,15 +52,18 @@
 				</view>
 			</view>
 		</view>
-		<view class="share-box-hide">
+		<!-- share-box-hide -->
+		<view class="">
 			<share ref="ShareBox" :shareConfig="shareConfig" @getShareImg="getShareImg"></share>
+		</view>
+		<view class="popMask" v-if="popMask" @click="hideMask">
+
 		</view>
 		<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100' @hidePopup="togglePopup('')">
 			<view id="Generated">
-				<img class="imgs" v-if="newImg" :src="newImg" alt="">
-				<view>长按保存图片</view>
-				<view class="gen-btns">
-					<view class="close-btn" @click="togglePopup('')">返回</view>
+				<img class="imgs share-job-imgs" v-if="newImg" :src="newImg" alt="">
+
+				<view class="share-sm">长按保存图片 <view class="close-btn" @click="togglePopup('')">返回</view>
 				</view>
 			</view>
 		</uni-popup>
@@ -86,6 +89,7 @@
 				title: '职位',
 				jobId: "",
 				poptype: "",
+				popMask: "",
 				newImg: "",
 				shareConfig: {
 					url: "/#/pages/company/detail"
@@ -145,8 +149,8 @@
 					"type": "",
 					"salary": "3000-5000",
 					"enums": "",
-					"province": "",
-					"city": "",
+					"province": "310000",
+					"city": "310109",
 					"district": "",
 					"age_min": "1年以下",
 					"responsibilities": "",
@@ -168,6 +172,24 @@
 				that.getData();
 			}
 			that.token = that.$store.state.UserInfo.token ? that.$store.state.UserInfo.token : "";
+			uni.getStorage({
+				key: 'WeChatInfo',
+				success: function(res) {
+					that.shareConfig = {
+						...that.shareConfig,
+						...res.data
+					}
+				}
+			});
+			uni.getStorage({
+				key: 'UserInfo',
+				success: function(res) {
+					that.shareConfig = {
+						...that.shareConfig,
+						...res.data
+					}
+				}
+			});
 			console.log("onLoad")
 		},
 		onShow() {
@@ -193,6 +215,10 @@
 				parm["fun"] = function(res) {
 					console.log(res)
 					if (res.success) {
+						that.shareConfig = {
+							...that.shareConfig,
+							...res.data
+						};
 						that.formData = res.data;
 					} else {}
 				};
@@ -211,6 +237,18 @@
 						checkType: "notnull",
 						checkRule: "",
 						errorMsg: "职位类型不能为空"
+					},
+					{
+						name: "overview",
+						checkType: "notnull",
+						checkRule: "",
+						errorMsg: "职位描述不能为空"
+					},
+					{
+						name: "overview",
+						checkType: "notnull",
+						checkRule: "",
+						errorMsg: "职位描述不能为空"
 					}
 				];
 				let _formData = that.formData;
@@ -301,9 +339,13 @@
 					this.$refs.ShareBox.toImage()
 				}, 1000)
 			},
+			hideMask() {
+				this.popMask = ''
+			},
 			getShareImg(img) {
 				var that = this;
 				that.poptype = "showNewImg";
+				that.popMask = "popMask";
 				that.newImg = img;
 			}
 		}
@@ -371,9 +413,67 @@
 	.job-del {
 		background: #ea575a;
 	}
-	.share-box-hide{
+
+	.share-box-hide {
 		opacity: 0;
+		height: 0;
+		overflow: hidden;
 		position: absolute;
 		left: -9999999px;
+	}
+
+	.share-sm {
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		align-content: center;
+		flex-direction: row;
+		padding: 10rpx 0;
+	}
+
+	.close-btn {
+		padding: 0 50rpx;
+		color: #007AFF;
+	}
+
+	.popMask {
+		background: rgba(0, 0, 0, 0.5);
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		z-index: 99999;
+		left: 0;
+		top: 0;
+		display: flex;
+		justify-content: flex-start;
+		align-items: flex-end;
+		align-content: flex-end;
+		flex-direction: column;
+	}
+
+	.popMask::before {
+		content: "\e634";
+		display: flex;
+		justify-content: flex-end;
+		font-size: 200rpx;
+		color: #FFFFFF;
+		padding-right: 60rpx;
+		font-family: "uniicons" !important;
+		font-style: normal;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	.popMask::after {
+		content: "点击 ··· 分享";
+		display: flex;
+		justify-content: flex-end;
+		font-size: 40rpx;
+		color: #FFFFFF;
+		padding-right: 100rpx;
+		font-family: "uniicons" !important;
+		font-style: normal;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 	}
 </style>

@@ -190,6 +190,7 @@ const store = new Vuex.Store({
 						key: 'WeChatInfo',
 						data: res.data,
 						success: function() {
+							ctx.state.WeChatInfo = res.data;
 							//console.log('success');
 						}
 					});

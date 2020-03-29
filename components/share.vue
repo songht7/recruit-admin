@@ -2,7 +2,7 @@
 	<view class="share-img-wrapper">
 		<view class="uni-padding-wrap">
 			<view class="portrait-box">
-				<imageWrapper ref="imageWrapper" :data="data" :QRCodeImg="QRCodeImg"></imageWrapper>
+				<imageWrapper ref="imageWrapper" :data="data" :QRCodeImg="QRCodeImg" :shareConfig="shareConfig"></imageWrapper>
 			</view>
 			<view class="portrait-main">
 				<view class="imgSelect">

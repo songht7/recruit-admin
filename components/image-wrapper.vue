@@ -1,6 +1,27 @@
 <template>
 	<view id="CanvaBox">
 		<view id="ImageWrapper" class="imageWrapper">
+			<view class="share-job-info">
+				<view class="jobview jobUser">
+					<view class="portrait">
+						<image v-if="shareConfig.userError" class="portrait-img" :src="shareConfig.userError.headimgurl" mode="aspectFit"></image>
+						<uni-icons v-else class="portrait-img" type="touxiang1" size="60" color="#fff"></uni-icons>
+					</view>
+					<view class="ju-name">{{shareConfig.userError?shareConfig.userError.nickname:"招聘专员"}}</view>
+				</view>
+				<view class="jobview">
+					<view class="j-t">
+						正在直聘
+					</view>
+					<view class="j-n">{{shareConfig.name}}/{{shareConfig.type}}</view>
+				</view>
+				<view class="jobcomp">
+					<view class="c-n">
+						{{shareConfig.enterprise?shareConfig.enterprise.name:""}} 期待你的加入
+					</view>
+					<view class="c-t">{{time}}</view>
+				</view>
+			</view>
 			<view class="share-bottom">
 				<img :src="QRCodeImg" class="QRCodeImg" alt="">
 				<view class="share-ovs">
@@ -18,6 +39,10 @@
 	export default {
 		name: 'imageWrapper',
 		props: {
+			shareConfig: {
+				type: Object,
+				default: () => {}
+			},
 			maskImg: Array,
 			slots: {
 				type: String,
@@ -38,7 +63,11 @@
 			return {};
 		},
 		onShow() {},
-		computed: {},
+		computed: {
+			time: () => {
+				return new Date().toLocaleDateString();
+			}
+		},
 		methods: {
 			touch(k) {
 				console.log(k)
@@ -98,10 +127,12 @@
 		color: #007AFF;
 		font-size: 26rpx;
 	}
-	.qr-ov{
+
+	.qr-ov {
 		border: 1px solid #007AFF;
 		display: inline;
 	}
+
 	.sh-ov {
 		font-size: 24rpx;
 	}
@@ -111,5 +142,53 @@
 		padding: 10rpx 0;
 		text-align: center;
 		color: #007AFF;
+	}
+
+	.share-job-info {
+		width: 90%;
+		padding: 5%;
+		color: #FFFFFF;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		align-content: space-around;
+		flex-direction: column;
+		height: 65%;
+	}
+
+	.jobUser {
+		display: flex;
+		justify-content: flex-start;
+		flex-direction: row;
+		align-items: center;
+		align-content: center;
+	}
+
+	.ju-name {
+		font-size: 32rpx;
+		padding-left: 20rpx;
+	}
+
+	.portrait {
+		width: 120rpx;
+		height: 120rpx;
+		border-radius: 50%;
+		overflow: hidden;
+	}
+	.portrait-img {
+		width: 100%;
+		height: 100%;
+	}
+
+	.jobview {
+		padding: 30rpx 0;
+	}
+
+	.j-t {
+		font-size: 32rpx;
+	}
+
+	.j-n {
+		font-size: 45rpx;
 	}
 </style>

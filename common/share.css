@@ -13,6 +13,10 @@
 	width: 90%;
 }
 
+.share-job-imgs {
+	border: 1px solid #E2E2E2;
+}
+
 .gen-btns {
 	position: absolute;
 	width: 90%;
