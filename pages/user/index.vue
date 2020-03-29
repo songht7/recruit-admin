@@ -61,7 +61,7 @@
 		onShow() {
 			var that = this;
 			that.$store.dispatch("cheack_user");
-			that.$store.dispatch("cheack_page", 2);
+			//that.$store.dispatch("cheack_page", 2);
 			uni.getStorage({
 				key: "WeChatInfo",
 				success: function(res) {
