@@ -27,7 +27,8 @@ const store = new Vuex.Store({
 		page_index: 0,
 		WeChatInfo: {},
 		UserInfo: {},
-		testToken: "071gNw5a0GfslA1o7A5a0kql5a0gNw5B"
+		isWeixin: false,
+		testToken: "7e085252b0fb8cdc86020f1c53ecabde44686a98",
 	},
 	mutations: {
 		switch_loading(state, status) {
@@ -99,6 +100,10 @@ const store = new Vuex.Store({
 		cheack_user(ctx) {
 			var user = "";
 			var _openid = "";
+			let isWeixin = !!/micromessenger/i.test(navigator.userAgent.toLowerCase())
+			if (!isWeixin) {
+				return
+			}
 			uni.getStorage({
 				key: "UserInfo",
 				success: function(res) {
@@ -115,8 +120,7 @@ const store = new Vuex.Store({
 						uni.redirectTo({
 							url: "/pages/user/login"
 						})
-					} else {
-					}
+					} else {}
 					ctx.commit("get_user", user)
 				},
 				fail() {
@@ -129,6 +133,10 @@ const store = new Vuex.Store({
 		},
 		cheack_page(ctx, index) {
 			ctx.commit("change_page", index)
+		},
+		isWeixin(ctx) {
+			let isWeixin = !!/micromessenger/i.test(navigator.userAgent.toLowerCase());
+			ctx.state.isWeixin = isWeixin;
 		},
 		goback(ctx, url) {
 			if (url) {

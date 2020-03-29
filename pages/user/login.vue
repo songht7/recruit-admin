@@ -41,15 +41,12 @@
 					phone: '',
 					code: ''
 				},
+				token: "",
 				WeChatInfo: {}
 			}
 		},
 		onLoad() {
-
-		},
-		onShow() {
 			var that = this;
-			that.$store.dispatch("cheack_user");
 			uni.getStorage({
 				key: 'WeChatInfo',
 				success: function(res) {
@@ -62,6 +59,15 @@
 					}
 				}
 			});
+		},
+		onShow() {
+			var that = this;
+			console.log("-------------")
+			that.$store.dispatch("cheack_user");
+			if (that.$store.state.UserInfo.token) {
+				that.token = that.$store.state.UserInfo.token;
+				that.login();
+			}
 		},
 		methods: {
 			login(val) {
@@ -77,11 +83,14 @@
 				let _formData = that.formData;
 				console.log(that.formData);
 				var checkRes = graceChecker.check(_formData, __rule);
-				if (checkRes) {
+				if (checkRes || that.token) {
 					var parm = {
 						inter: "weChatAuth",
-						parm: `?phone=${that.formData.phone}&phoneCode=${that.formData.code}&openid=${that.WeChatInfo.openid}&token=`
+						parm: `?phone=${that.formData.phone}&phoneCode=${that.formData.code}&openid=${that.WeChatInfo.openid}`
 					};
+					if (that.token) {
+						parm['parm'] = `?token=${that.token}`
+					}
 					parm["fun"] = function(res) {
 						console.log(res)
 						if (res.success) {

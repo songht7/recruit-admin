@@ -11,9 +11,9 @@
 						<uni-icons v-else class="portrait-img" type="touxiang1" size="75" color="#fff"></uni-icons>
 					</view>
 					<view class="user-ovs">
-						<view class="user-name">{{UserInfo.enterprise.username}}</view>
+						<view class="user-name">{{UserInfo.enterprise?UserInfo.enterprise.username:"游客"}}</view>
 						<view class="user-sub-ov">
-							<view class="reume-label">{{UserInfo.enterprise.name}}</view>
+							<view class="reume-label">{{UserInfo.enterprise?UserInfo.enterprise.name:""}}</view>
 						</view>
 					</view>
 				</view>
