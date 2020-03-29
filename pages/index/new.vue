@@ -52,6 +52,18 @@
 				</view>
 			</view>
 		</view>
+		<view class="share-box-hide">
+			<share ref="ShareBox" :shareConfig="shareConfig" @getShareImg="getShareImg"></share>
+		</view>
+		<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100' @hidePopup="togglePopup('')">
+			<view id="Generated">
+				<img class="imgs" v-if="newImg" :src="newImg" alt="">
+				<view>长按保存图片</view>
+				<view class="gen-btns">
+					<view class="close-btn" @click="togglePopup('')">返回</view>
+				</view>
+			</view>
+		</uni-popup>
 		<mpvue-picker :themeColor="themeColor" ref="mpvuePicker" :mode="mode" :deepLength="deepLength" :pickerValueDefault="pickerValueDefault"
 		 @onConfirm="onConfirm" @onCancel="onCancel" :pickerValueArray="pickerValueArray"></mpvue-picker>
 		<mpvue-city-picker :themeColor="themeColor" ref="mpvueCityPicker" :pickerValueDefault="cityPickerValueDefault"
@@ -66,11 +78,18 @@
 	import mpvueCityPicker from '@/components/mpvue-citypicker/mpvueCityPicker.vue'
 	import cityData from '@/common/city.data.js';
 	var graceChecker = require("@/common/graceChecker.js");
+	import uniPopup from '@/components/uni-popup.vue';
+	import Share from '@/components/share.vue';
 	export default {
 		data() {
 			return {
 				title: '职位',
 				jobId: "",
+				poptype: "",
+				newImg: "",
+				shareConfig: {
+					url: "/#/pages/company/detail"
+				},
 				age_min: [{
 					name: '1年以下'
 				}, {
@@ -98,17 +117,17 @@
 				}],
 				enums_index: 0,
 				salary: [{
-					name: '初中及以下'
+					name: '3000-5000'
 				}, {
-					name: '中专'
+					name: '5000-7000'
 				}, {
-					name: '高中'
+					name: '7000-10000'
 				}, {
-					name: '大专'
+					name: '10000-20000'
 				}, {
-					name: '本科'
+					name: '20000以上'
 				}, {
-					name: '硕士及以上'
+					name: '面议'
 				}],
 				salary_index: 0,
 				mulLinkageTwoPicker: cityData,
@@ -124,12 +143,12 @@
 					"name": "",
 					"overview": "",
 					"type": "",
-					"salary": "",
+					"salary": "3000-5000",
 					"enums": "",
 					"province": "",
 					"city": "",
 					"district": "",
-					"age_min": "",
+					"age_min": "1年以下",
 					"responsibilities": "",
 					"qualifications": ""
 				},
@@ -138,7 +157,9 @@
 		},
 		components: {
 			mpvuePicker,
-			mpvueCityPicker
+			mpvueCityPicker,
+			uniPopup,
+			Share
 		},
 		onLoad(option) {
 			var that = this;
@@ -154,6 +175,13 @@
 			that.$store.dispatch("cheack_user");
 			that.$store.dispatch("menu_default");
 			that.$store.dispatch("cheack_page", 0);
+		},
+		onReady() {
+			var that = this;
+			if (that.jobId) {
+				that.$refs.ShareBox.getBase64Image();
+				that.$refs.ShareBox.setWebQRcode();
+			}
 		},
 		methods: {
 			getData(type) {
@@ -186,6 +214,7 @@
 					}
 				];
 				let _formData = that.formData;
+				console.log("_formData：", _formData)
 				var checkRes = graceChecker.check(_formData, __rule);
 				if (checkRes) {
 					var parm = {
@@ -253,12 +282,37 @@
 				this.formData['province'] = e.value[0];
 				this.formData['city'] = e.value[1];
 				this.area = e.label;
+			},
+			togglePopup(type) {
+				var that = this;
+				that.poptype = type;
+			},
+			jobShare() {
+				var that = this;
+				uni.showLoading({
+					title: '加载中'
+				})
+				uni.pageScrollTo({
+					scrollTop: 0,
+					duration: 0
+				})
+				setTimeout(() => {
+					uni.hideLoading()
+					this.$refs.ShareBox.toImage()
+				}, 1000)
+			},
+			getShareImg(img) {
+				var that = this;
+				that.poptype = "showNewImg";
+				that.newImg = img;
 			}
 		}
 	}
 </script>
 
 <style scoped>
+	@import "../../common/share.css";
+
 	.content {
 		padding: 90rpx 30rpx 30rpx;
 	}
@@ -316,5 +370,10 @@
 
 	.job-del {
 		background: #ea575a;
+	}
+	.share-box-hide{
+		opacity: 0;
+		position: absolute;
+		left: -9999999px;
 	}
 </style>

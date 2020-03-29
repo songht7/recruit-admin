@@ -19,6 +19,8 @@ const store = new Vuex.Store({
 		data: {},
 		resumeTemp: {}, //简历临时模板
 		interface: common.Interface,
+		domain: common.Interface.domain,
+		webDomain: common.Interface.webDomain,
 		systemInfo: {},
 		portrait: "",
 		cosConfig: common.Interface.cosConfig,

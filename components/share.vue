@@ -1,5 +1,5 @@
 <template>
-	<view :class="['content']">
+	<view class="share-img-wrapper">
 		<view class="uni-padding-wrap">
 			<view class="portrait-box">
 				<imageWrapper ref="imageWrapper" :data="data" :QRCodeImg="QRCodeImg"></imageWrapper>
@@ -10,20 +10,11 @@
 					<view class="webQRCode">
 						<canvas class="tki-qrcode-canvas" canvas-id="tki-qrcode-canvas" :style="{width:QRSize+'px',height:QRSize+'px'}" />
 					</view>
-					<view class="editBtns">
+					<!-- 	<view class="editBtns">
 						<view class="editBtn" @click="toImage">完成</view>
-					</view>
+					</view> -->
 				</view>
 			</view>
-			<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100' @hidePopup="togglePopup('')">
-				<view id="Generated">
-					<img class="imgs" v-if="newImg" :src="newImg" alt="">
-					<view>长按保存图片</view>
-					<view class="gen-btns">
-						<view class="close-btn" @click="togglePopup('')">返回</view>
-					</view>
-				</view>
-			</uni-popup>
 		</view>
 	</view>
 </template>
@@ -35,6 +26,12 @@
 	import imageWrapper from '@/components/image-wrapper.vue';
 	import uniPopup from '@/components/uni-popup.vue';
 	export default {
+		props: {
+			shareConfig: {
+				type: Object,
+				default: () => {}
+			}
+		},
 		data() {
 			return {
 				data: {},
@@ -59,12 +56,12 @@
 		},
 		onLoad(option) {
 			var that = this;
-			that.setWebQRcode();
+			// that.setWebQRcode();
 		},
 		onShow() {
 			var that = this;
-			that.getBase64Image();
-			that.$store.dispatch("cheack_user");
+			// that.getBase64Image();
+			// that.$store.dispatch("cheack_user");
 		},
 		onReady() {
 			var that = this;
@@ -76,7 +73,9 @@
 		methods: {
 			setWebQRcode() { //生成QR
 				var that = this;
-				var webUrl = that.$store.state.domain + "/#/pages/company/detail?id=54";
+				// /pages/company/detail?id=54
+				let u = that.shareConfig.url ? that.shareConfig.url : "/#/pages/company/index";
+				var webUrl = that.$store.state.webDomain + u;
 				if (cQRcode) {
 					cQRcode.clear()
 				}
@@ -123,6 +122,7 @@
 						"imgType": 'base64Img',
 						"upload_percent": 0
 					}];
+					that.$emit("getShareImg", dataURL)
 					that.newImg = dataURL;
 				});
 			},
@@ -163,10 +163,6 @@
 </script>
 
 <style scoped>
-	page {
-		height: 100%;
-	}
-
 	.webQRCode {
 		position: absolute;
 		width: 100upx;
@@ -177,15 +173,14 @@
 
 	.content {
 		height: 100%;
-		background: #b0ecd2;
 	}
 
 	.uni-padding-wrap {
 		height: 100%;
+		padding: 0;
 	}
 
 	.portrait-box {
-		padding: 90upx 0 0;
 		display: flex;
 		justify-content: center;
 		flex-direction: row;
@@ -195,34 +190,6 @@
 
 	.imgs {
 		width: 100%;
-	}
-
-	#Generated {
-		display: flex;
-		justify-content: flex-start;
-		flex-direction: column;
-		align-content: center;
-		align-items: center;
-		position: relative;
-		height: 90%;
-		padding: 5% 0;
-	}
-
-	#Generated .imgs {
-		width: 90%;
-	}
-
-	.gen-btns {
-		position: absolute;
-		width: 90%;
-		left: 0;
-		bottom: 0;
-		padding: 40upx 5%;
-		display: flex;
-		flex-direction: row;
-		align-content: center;
-		align-items: center;
-		justify-content: space-around;
 	}
 
 	.imgSelect {

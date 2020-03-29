@@ -24,6 +24,7 @@ var api = {
 	"dev": {
 		"interface": "https://api-job.jobpgroup.com", //接口
 		"domain": "http://job-admin.jobpgroup.com",
+		"webDomain": "http://job.jobpgroup.com",
 		"appName": "人力资源",
 		"phoneNumber": "4008200000",
 		"cosConfig": { //`https://plbs-test-1257286922.cos.ap-shanghai.myqcloud.com/...`
@@ -44,6 +45,7 @@ export default {
 		"site": lks,
 		"apiurl": api[lks]["interface"], //space111111
 		"domain": api[lks]["domain"],
+		"webDomain": api[lks]["webDomain"],
 		"cosConfig": api[lks]["cosConfig"],
 		"appName": api[lks]["appName"],
 		"phoneNumber": api[lks]["phoneNumber"],
