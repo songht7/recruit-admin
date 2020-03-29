@@ -52,18 +52,18 @@
 				</view>
 			</view>
 		</view>
-		<!-- share-box-hide -->
-		<view class="">
+		<!--  -->
+		<view class="share-box-hide">
 			<share ref="ShareBox" :shareConfig="shareConfig" @getShareImg="getShareImg"></share>
 		</view>
-		<view class="popMask" v-if="popMask" @click="hideMask">
 
-		</view>
+		<view class="popMask" v-if="popMask" @click="hideMask"></view>
+
 		<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100' @hidePopup="togglePopup('')">
 			<view id="Generated">
 				<img class="imgs share-job-imgs" v-if="newImg" :src="newImg" alt="">
 
-				<view class="share-sm">长按保存图片 <view class="close-btn" @click="togglePopup('')">返回</view>
+				<view class="share-sm"><view class="close-btn" @click="togglePopup('')">返回</view>长按图片保存后分享 
 				</view>
 			</view>
 		</uni-popup>
@@ -345,7 +345,7 @@
 			getShareImg(img) {
 				var that = this;
 				that.poptype = "showNewImg";
-				that.popMask = "popMask";
+				//that.popMask = "popMask";//分享提示
 				that.newImg = img;
 			}
 		}
@@ -429,11 +429,14 @@
 		align-content: center;
 		flex-direction: row;
 		padding: 10rpx 0;
+		font-size: 32rpx;
+		color: #007AFF;
+		font-weight: 600;
 	}
 
 	.close-btn {
 		padding: 0 50rpx;
-		color: #007AFF;
+		color: #666;
 	}
 
 	.popMask {

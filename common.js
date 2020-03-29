@@ -61,6 +61,7 @@ export default {
 			
 			"supports": "/v4/ApiArticle-supports.htm", //职位列表(企业?enterprise_id=14)
 			"supportDtl": "/v4/ApiArticle-support.htm", //职位详情 ?id=53[get查看,PUT保存]
+			"getJsApiTicket": "/v2/ApiWeChat-getJsApiTicket.htm",//获取WeChatTicket
 		}
 	}
 }

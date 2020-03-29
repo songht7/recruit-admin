@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import tab_bar from "./modules/tab_bar.js"
 import common from "../common.js"
+// #ifdef MP-WEIXIN
+var jweixin = require('jweixin-module')
+// #endif
 Vue.use(Vuex)
 
 
@@ -139,6 +142,69 @@ const store = new Vuex.Store({
 		isWeixin(ctx) {
 			let isWeixin = !!/micromessenger/i.test(navigator.userAgent.toLowerCase());
 			ctx.state.isWeixin = isWeixin;
+		},
+		wxShare(ctx, shareData) {
+			//data->share_url, title, imgUrl, dec
+			var TicketUrl = location.origin + "/#/";
+			var isIphone = navigator.userAgent.includes('iPhone');
+			var isIpad = navigator.userAgent.includes('iPad');
+			if (isIphone || isIpad) {
+				TicketUrl = location.origin + "/";
+			}
+			var parm = {
+				inter: "getJsApiTicket",
+				header: {},
+				parm: "?url=" + TicketUrl
+			};
+			parm["fun"] = function(res) {
+				console.log(res)
+				uni.setStorage({
+					key: 'wx_ticket',
+					data: {
+						"access_token": res.access_token,
+						"jsapi_ticket": res.ticket,
+						"noncestr": res.noncestr,
+						"signature": res.signature,
+						"expires_in": res.expires_in
+					},
+					success: function() {}
+				});
+				var _config = {
+					debug: false,
+					appId: ctx.state.wxConfig.AppID,
+					timestamp: res.timestamp,
+					nonceStr: res.noncestr,
+					signature: res.signature,
+					jsApiList: [
+						'updateAppMessageShareData',
+						'updateTimelineShareData',
+						'onMenuShareAppMessage',
+						'onMenuShareTimeline',
+						'onMenuShareQQ'
+					]
+				}
+				jweixin.config(_config);
+			};
+			let wx_ticket = ctx.dispatch("getData", parm)
+
+			var wxSet = {
+				title: shareData.title || "招聘",
+				desc: shareData.dec || "期待你的加入",
+				link: shareData.share_url,
+				imgUrl: shareData.imgUrl,
+				success: function() {}
+			};
+			jweixin.ready(function() {
+				//wx.updateAppMessageShareData(wxSet);
+				//wx.updateTimelineShareData(wxSet);
+				// 2. 分享接口
+				// 2.1 监听“分享给朋友”，按钮点击、自定义分享内容及分享结果接口
+				jweixin.onMenuShareAppMessage(wxSet);
+				// 2.2 监听“分享到朋友圈”按钮点击、自定义分享内容及分享结果接口
+				jweixin.onMenuShareTimeline(wxSet);
+				// 2.3 监听“分享到QQ”按钮点击、自定义分享内容及分享结果接口
+				jweixin.onMenuShareQQ(wxSet);
+			});
 		},
 		goback(ctx, url) {
 			if (url) {
