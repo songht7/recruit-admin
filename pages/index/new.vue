@@ -63,7 +63,8 @@
 			<view id="Generated">
 				<img class="imgs share-job-imgs" v-if="newImg" :src="newImg" alt="">
 
-				<view class="share-sm"><view class="close-btn" @click="togglePopup('')">返回</view>长按图片保存后分享 
+				<view class="share-sm">
+					<view class="close-btn" @click="togglePopup('')">返回</view>长按图片保存后分享
 				</view>
 			</view>
 		</uni-popup>
@@ -91,9 +92,7 @@
 				poptype: "",
 				popMask: "",
 				newImg: "",
-				shareConfig: {
-					url: "/#/pages/company/detail"
-				},
+				shareConfig: {},
 				age_min: [{
 					name: '1年以下'
 				}, {
@@ -169,6 +168,10 @@
 			var that = this;
 			that.jobId = option.id ? option.id : "";
 			if (that.jobId) {
+				that.shareConfig = {
+					...that.shareConfig,
+					url: that.$store.state.webDomain + "/#/pages/company/detail?id=" + that.jobId
+				}
 				that.getData();
 			}
 			that.token = that.$store.state.UserInfo.token ? that.$store.state.UserInfo.token : "";

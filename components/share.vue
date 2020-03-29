@@ -74,8 +74,7 @@
 			setWebQRcode() { //生成QR
 				var that = this;
 				// /pages/company/detail?id=54
-				let u = that.shareConfig.url ? that.shareConfig.url : "/#/pages/company/index";
-				var webUrl = that.$store.state.webDomain + u;
+				var webUrl = that.shareConfig.url;
 				if (cQRcode) {
 					cQRcode.clear()
 				}
