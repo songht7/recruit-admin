@@ -24,8 +24,8 @@
 				</view>
 				<view class="lx-li">
 					<view class="lx-name">学历要求</view>
-					<picker @change="bindEnumsChange" :value="enums_index" :range="enums" range-key="name">
-						<view class="uni-input">{{enums[enums_index].name}}</view>
+					<picker @change="bindEnumsChange" :value="education_index" :range="education" range-key="name">
+						<view class="uni-input">{{education[education_index].name}}</view>
 					</picker>
 				</view>
 				<view class="lx-li">
@@ -105,7 +105,7 @@
 					name: '5年以上'
 				}],
 				age_min_index: 0,
-				enums: [{
+				education: [{
 					name: '初中及以下'
 				}, {
 					name: '中专'
@@ -118,7 +118,7 @@
 				}, {
 					name: '硕士及以上'
 				}],
-				enums_index: 0,
+				education_index: 0,
 				salary: [{
 					name: '3000-5000'
 				}, {
@@ -147,7 +147,7 @@
 					"overview": "",
 					"type": "",
 					"salary": "3000-5000",
-					"enums": "",
+					"education": "初中及以下",
 					"province": "310000",
 					"city": "310109",
 					"district": "",
@@ -416,70 +416,9 @@
 	.job-del {
 		background: #ea575a;
 	}
-
-	.share-box-hide {
-		opacity: 0;
-		height: 0;
-		overflow: hidden;
-		position: absolute;
-		left: -9999999px;
-	}
-
-	.share-sm {
-		display: flex;
-		justify-content: space-around;
-		align-items: center;
-		align-content: center;
-		flex-direction: row;
-		padding: 10rpx 0;
-		font-size: 32rpx;
-		color: #007AFF;
-		font-weight: 600;
-	}
-
 	.close-btn {
 		padding: 0 50rpx;
 		color: #666;
 	}
 
-	.popMask {
-		background: rgba(0, 0, 0, 0.5);
-		width: 100%;
-		height: 100%;
-		position: fixed;
-		z-index: 99999;
-		left: 0;
-		top: 0;
-		display: flex;
-		justify-content: flex-start;
-		align-items: flex-end;
-		align-content: flex-end;
-		flex-direction: column;
-	}
-
-	.popMask::before {
-		content: "\e634";
-		display: flex;
-		justify-content: flex-end;
-		font-size: 200rpx;
-		color: #FFFFFF;
-		padding-right: 60rpx;
-		font-family: "uniicons" !important;
-		font-style: normal;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-	}
-
-	.popMask::after {
-		content: "点击 ··· 分享";
-		display: flex;
-		justify-content: flex-end;
-		font-size: 40rpx;
-		color: #FFFFFF;
-		padding-right: 100rpx;
-		font-family: "uniicons" !important;
-		font-style: normal;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-	}
 </style>

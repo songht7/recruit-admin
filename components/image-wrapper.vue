@@ -13,11 +13,16 @@
 					<view class="j-t">
 						正在直聘
 					</view>
-					<view class="j-n">{{shareConfig.name}}/{{shareConfig.type}}</view>
+					<view class="j-n">{{shareConfig.name}}{{shareConfig.type?"/"+shareConfig.type:""}}</view>
 				</view>
 				<view class="jobcomp">
 					<view class="c-n">
-						{{shareConfig.enterprise?shareConfig.enterprise.name:""}} 期待你的加入
+						<block v-if="shareConfig.enterprise_id">
+							<view class="welcome">你的加入是<br />我们的期待。</view>
+						</block>
+						<block v-else>
+							{{shareConfig.enterprise?shareConfig.enterprise.name:""}} 期待你的加入
+						</block>
 					</view>
 					<view class="c-t">{{time}}</view>
 				</view>
@@ -175,6 +180,7 @@
 		border-radius: 50%;
 		overflow: hidden;
 	}
+
 	.portrait-img {
 		width: 100%;
 		height: 100%;
@@ -190,5 +196,10 @@
 
 	.j-n {
 		font-size: 45rpx;
+	}
+
+	.welcome {
+		font-size: 50rpx;
+		line-height: 1.4;
 	}
 </style>

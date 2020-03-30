@@ -20,28 +20,53 @@
 			</view>
 		</block>
 		<view class="job-btns">
-			<view class="job-add job-share" @click="share">
+			<view class="job-add job-share" @click="jobShare">
 				分享职位
 			</view>
 			<view class="job-add" @click="addJob">
 				发布新职位
 			</view>
 		</view>
+
+		<view class="share-box-hide">
+			<share ref="ShareBox" :shareConfig="shareConfig" @getShareImg="getShareImg"></share>
+		</view>
+
+		<view class="popMask" v-if="popMask" @click="hideMask"></view>
+
+		<uni-popup :show="poptype === 'showNewImg'" position="full" mode="fixed" width='100' @hidePopup="togglePopup('')">
+			<view id="Generated">
+				<img class="imgs share-job-imgs" v-if="newImg" :src="newImg" alt="">
+
+				<view class="share-sm">
+					<view class="close-btn" @click="togglePopup('')">返回</view>长按图片保存后分享
+				</view>
+			</view>
+		</uni-popup>
 		<!-- <tab-bar></tab-bar> -->
 	</view>
 </template>
 
 <script>
+	import uniPopup from '@/components/uni-popup.vue';
+	import Share from '@/components/share.vue';
 	export default {
 		data() {
 			return {
 				title: '职位',
 				list: [],
 				UserInfo: {},
-				enterprise_id: ""
+				enterprise_id: "",
+				poptype: "",
+				popMask: "",
+				newImg: "",
+				shareConfig: {},
 			}
 		},
-		components: {},
+		components: {
+			uniPopup,
+			Share
+		},
 		onLoad(option) {
 			var that = this;
 			that.$store.dispatch("cheack_user");
@@ -50,12 +75,24 @@
 			} else {
 				that.enterprise_id = 15 //test
 			}
+			that.shareConfig = {
+				...that.shareConfig,
+				enterprise_id: that.enterprise_id,
+				url: that.$store.state.webDomain + "/#/pages/company/index?enterprise_id=" + that.enterprise_id
+			}
 		},
 		onShow() {
 			var that = this;
 			that.$store.dispatch("menu_default");
 			that.$store.dispatch("cheack_page", 0);
 			that.getData();
+		},
+		onReady() {
+			var that = this;
+			if (that.enterprise_id) {
+				that.$refs.ShareBox.getBase64Image();
+				that.$refs.ShareBox.setWebQRcode();
+			}
 		},
 		methods: {
 			getData(type) {
@@ -82,12 +119,39 @@
 					url: '/pages/index/new'
 				});
 			},
-			share() {}
+			togglePopup(type) {
+				var that = this;
+				that.poptype = type;
+			},
+			jobShare() {
+				var that = this;
+				uni.showLoading({
+					title: '加载中'
+				})
+				uni.pageScrollTo({
+					scrollTop: 0,
+					duration: 0
+				})
+				setTimeout(() => {
+					uni.hideLoading()
+					this.$refs.ShareBox.toImage()
+				}, 1000)
+			},
+			hideMask() {
+				this.popMask = ''
+			},
+			getShareImg(img) {
+				var that = this;
+				that.poptype = "showNewImg";
+				//that.popMask = "popMask";//分享提示
+				that.newImg = img;
+			}
 		}
 	}
 </script>
 
 <style scoped>
+	@import "../../common/share.css";
 	.content {
 		padding: 90rpx 30rpx 30rpx;
 	}
