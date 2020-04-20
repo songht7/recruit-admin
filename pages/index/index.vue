@@ -99,7 +99,10 @@
 				var that = this;
 				var parm = {
 					inter: "supports",
-					parm: `?enterprise_id=${that.enterprise_id}`
+					parm: `?enterprise_id=${that.enterprise_id}`,
+					header: {
+						token: that.$store.state.UserInfo.token
+					}
 				};
 				parm["fun"] = function(res) {
 					console.log(res)

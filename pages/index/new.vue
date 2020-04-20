@@ -93,6 +93,8 @@
 				popMask: "",
 				newImg: "",
 				shareConfig: {},
+				UserInfo: {},
+				WeChatInfo: {},
 				age_min: [{
 					name: '1年以下'
 				}, {
@@ -179,18 +181,20 @@
 				key: 'WeChatInfo',
 				success: function(res) {
 					that.shareConfig = {
-						...that.shareConfig,
-						...res.data
-					}
+							...that.shareConfig,
+							...res.data
+						},
+						that.WeChatInfo = res.data;
 				}
 			});
 			uni.getStorage({
 				key: 'UserInfo',
 				success: function(res) {
 					that.shareConfig = {
-						...that.shareConfig,
-						...res.data
-					}
+							...that.shareConfig,
+							...res.data
+						},
+						that.UserInfo = res.data;
 				}
 			});
 			console.log("onLoad")
@@ -211,9 +215,13 @@
 		methods: {
 			getData(type) {
 				var that = this;
+				var _token = that.UserInfo.token ? that.UserInfo.token : "";
 				var parm = {
 					inter: "supportDtl",
-					parm: `?id=${that.jobId}`
+					parm: `?id=${that.jobId}`,
+					header: {
+						token: _token
+					}
 				};
 				parm["fun"] = function(res) {
 					console.log(res)
@@ -223,6 +231,7 @@
 							...res.data
 						};
 						that.formData = res.data;
+						that.area = `${res.data.province}-${res.data.city}`;
 					} else {}
 				};
 				that.$store.dispatch("getData", parm)
@@ -299,8 +308,8 @@
 			},
 			bindEnumsChange: function(e) {
 				//console.log('picker发送选择改变，携带值为：' + e.target.value + this.enums[e.target.value]["name"])
-				this.enums_index = e.target.value;
-				this.formData['enums'] = this.enums[e.target.value]["name"];
+				this.education_index = e.target.value;
+				this.formData['education'] = this.education[e.target.value]["name"];
 			},
 			bindSalaryChange: function(e) {
 				//console.log('picker发送选择改变，携带值为：' + e.target.value + this.enums[e.target.value]["name"])
@@ -320,8 +329,10 @@
 			onConfirm(e) {
 				this.pickerText = JSON.stringify(e)
 				console.log(e)
+				let _area = e.label.split("-");
 				this.formData['province'] = e.value[0];
 				this.formData['city'] = e.value[1];
+				this.formData['district'] = e.value[2] ? e.value[2] : "";
 				this.area = e.label;
 			},
 			togglePopup(type) {
@@ -416,9 +427,9 @@
 	.job-del {
 		background: #ea575a;
 	}
+
 	.close-btn {
 		padding: 0 50rpx;
 		color: #666;
 	}
-
 </style>
