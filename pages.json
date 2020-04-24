@@ -72,12 +72,12 @@
 			"style": {
 				"navigationBarTitleText": "我的",
 				"enablePullDownRefresh": true,
-				"navigationStyle": "custom",
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
+				"navigationStyle": "custom"
+				// ,"app-plus": {
+				// 	"titleNView": {
+				// 		"type": "transparent"
+				// 	}
+				// }
 			}
 		}
 	],

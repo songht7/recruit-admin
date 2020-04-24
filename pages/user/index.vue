@@ -2,6 +2,7 @@
 	<view class="content">
 		<view id="UserHeader">
 			<view class="user-build">
+				<uni-icons class="build-btn" type="tuichu" :size="24" color="#fff" @click="$store.dispatch('logout')"></uni-icons>
 				<!-- <uni-icons class="build-btn" type="shezhi" :size="32" color="#fff" @click="userBuild"></uni-icons> -->
 			</view>
 			<view class="user-info">
@@ -60,18 +61,26 @@
 		},
 		onShow() {
 			var that = this;
-			that.$store.dispatch("cheack_user");
+			//that.$store.dispatch("cheack_user");
 			//that.$store.dispatch("cheack_page", 2);
 			uni.getStorage({
 				key: "WeChatInfo",
 				success: function(res) {
 					console.log(res.data)
-					that.WeChatInfo = res.data.userError;
-					that.portrait = res.data.userError.headimgurl;
+					that.WeChatInfo = res.data.wechat;
+					that.portrait = res.data.wechat.headimgurl;
 				},
 				fail() {}
 			})
-			that.UserInfo = that.$store.state.UserInfo;
+			uni.getStorage({
+				key: "UserInfo",
+				success: function(res) {
+					that.UserInfo = res.data;
+				},
+				fail() {
+					that.UserInfo = that.$store.state.UserInfo;
+				}
+			})
 		},
 		methods: {
 			userBinding() {

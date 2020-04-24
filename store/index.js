@@ -110,7 +110,7 @@ const store = new Vuex.Store({
 				return
 			}
 			uni.getStorage({
-				key: "UserInfo",
+				key: "WeChatInfo",
 				success: function(res) {
 					user = res.data;
 					let timestamp = Math.round(new Date().getTime() / 1000);
@@ -223,7 +223,7 @@ const store = new Vuex.Store({
 		},
 		wxXCXAuth(ctx) {
 			console.log("--wxXCXAuth--")
-			let redirect_uri = window.location.href;
+			let redirect_uri = ctx.state.interface.domain;
 			let REDIRECT_URI = encodeURIComponent(redirect_uri), //授权后重定向的回调链接地址， 请使用 urlEncode 对链接进行处理
 				scope = "snsapi_userinfo", //snsapi_base，snsapi_userinfo （弹出授权页面，获取更多信息）
 				state = "STATE"; //重定向后会带上state参数，开发者可以填写a-zA-Z0-9的参数值，最多128字节
@@ -233,7 +233,7 @@ const store = new Vuex.Store({
 				'&response_type=code&scope=' + scope + '&state=' + state + '#wechat_redirect';
 			//let code = ctx.dispatch("queryString", 'code');
 			const reg = new RegExp(`(^|&)code=([^&]*)(&|$)`, 'i')
-			const r = window && window.location.search.substr(1).match(reg)
+			var r = window && window.location.search.substr(1).match(reg)
 			if (r != null) {
 				let code = unescape(r[2])
 				console.log("get-wxCode-success:", code)
@@ -273,45 +273,57 @@ const store = new Vuex.Store({
 			});
 		},
 		logout(ctx) {
-			var _openid = ctx.state.openid;
-			console.log("_openid:", _openid)
-			var _token = ctx.state.user.token;
-			var _data = {
-				"inter": "logout",
-				"header": {
-					"Content-Type": "application/json",
-					"token": _token
-				},
-				"method": "DELETE"
-			}
-			if (_openid) {
-				_data["header"]["openid"] = _openid
-			}
-			_data["fun"] = function(ress) {
-				if (ress.success) {
-					uni.removeStorage({
-						key: 'user',
-						success: function(res) {},
-						complete() {
-							ctx.commit("get_user", {})
-							ctx.dispatch("menu_default")
-							uni.redirectTo({
-								url: '/pages/index/index'
-							});
-						}
-					});
-					uni.removeStorage({
-						key: 'openid',
-						success: function(res) {}
-					});
-				} else {
-					uni.showToast({
-						icon: "none",
-						title: "退出失败，请重试..."
-					})
-				}
-			}
-			ctx.dispatch("getData", _data)
+			console.log(123)
+			uni.removeStorage({
+				key: 'WeChatInfo',
+				success: function(res) {}
+			});
+			uni.removeStorage({
+				key: 'UserInfo',
+				success: function(res) {}
+			});
+			ctx.state.WeChatInfo = {};
+			ctx.state.UserInfo = {};
+			window.location.href = ctx.state.interface.domain;
+			// var _openid = ctx.state.openid;
+			// console.log("_openid:", _openid)
+			// var _token = ctx.state.user.token;
+			// var _data = {
+			// 	"inter": "logout",
+			// 	"header": {
+			// 		"Content-Type": "application/json",
+			// 		"token": _token
+			// 	},
+			// 	"method": "DELETE"
+			// }
+			// if (_openid) {
+			// 	_data["header"]["openid"] = _openid
+			// }
+			// _data["fun"] = function(ress) {
+			// 	if (ress.success) {
+			// 		uni.removeStorage({
+			// 			key: 'user',
+			// 			success: function(res) {},
+			// 			complete() {
+			// 				ctx.commit("get_user", {})
+			// 				ctx.dispatch("menu_default")
+			// 				uni.redirectTo({
+			// 					url: '/pages/index/index'
+			// 				});
+			// 			}
+			// 		});
+			// 		uni.removeStorage({
+			// 			key: 'openid',
+			// 			success: function(res) {}
+			// 		});
+			// 	} else {
+			// 		uni.showToast({
+			// 			icon: "none",
+			// 			title: "退出失败，请重试..."
+			// 		})
+			// 	}
+			// }
+			// ctx.dispatch("getData", _data)
 		},
 		getBasePhone(ctx) {
 			var _data = {

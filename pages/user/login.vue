@@ -5,15 +5,22 @@
 				<view class="login-label"><text class="label">管理员登录</text></view>
 
 				<view :class="['login-input',phoneErr?'phone-err':'']">
-					<input class="user-input" type="number" maxlength="11" @focus="onFocus" placeholder="手机号" v-model="formData['phone']" />
+					<view class="input-left">
+						<uni-icons type="p-shouji" size="18" color="#999"></uni-icons>
+						<input class="user-input " type="number" maxlength="11" @focus="onFocus" placeholder="手机号" v-model="formData['phone']" />
+					</view>
 				</view>
 				<view class="login-input">
-					<input class="user-input" type="text" maxlength="6" v-model="formData['code']" placeholder="验证码" />
+					<view class="input-left">
+						<uni-icons type="yanzhengma" size="18" color="#999"></uni-icons>
+						<input class="user-input" type="text" maxlength="6" v-model="formData['code']" placeholder="验证码" />
+					</view>
 					<view :class="['get-code',seandCode?'loading':'']" @click="getCode">{{seandCode?count+'s 重新获取':'获取验证码'}}</view>
 				</view>
 				<view class="login-btns">
 					<view class="login-btn" @click="login">登录</view>
 				</view>
+				<view class="" @click="$store.dispatch('logout')" style="padding: 30rpx;">清除缓存</view>
 			</view>
 		</block>
 	</view>
@@ -47,27 +54,40 @@
 		},
 		onLoad() {
 			var that = this;
+		},
+		onShow() {
+			var that = this;
+			console.log("-------------")
 			uni.getStorage({
 				key: 'WeChatInfo',
 				success: function(res) {
 					console.log("onShow:", res.data)
 					that.WeChatInfo = res.data;
-					if (that.$store.state.UserInfo.id && that.WeChatInfo.openid) {
+					if (that.$store.state.UserInfo.id && that.WeChatInfo.wechat.openid) {
 						uni.redirectTo({
 							url: "/pages/user/index"
 						})
 					}
+				},
+				fail() {
+					if (that.$store.state.isWeixin) {
+						that.$store.dispatch("wxXCXAuth")
+					}
+				}
+			});
+			that.$store.dispatch("cheack_user");
+			uni.getStorage({
+				key: 'UserInfo',
+				success: function(res) {
+					if (res.data.token) {
+						that.token = res.data.token;
+						that.login();
+					}
 				}
 			});
 		},
-		onShow() {
+		onReady() {
 			var that = this;
-			console.log("-------------")
-			that.$store.dispatch("cheack_user");
-			if (that.$store.state.UserInfo.token) {
-				that.token = that.$store.state.UserInfo.token;
-				that.login();
-			}
 		},
 		methods: {
 			login(val) {
@@ -81,18 +101,29 @@
 					}
 				];
 				let _formData = that.formData;
-				console.log(that.formData);
 				var checkRes = graceChecker.check(_formData, __rule);
+				console.log(that.formData, checkRes, that.token);
 				if (checkRes || that.token) {
+					console.log("checkRescheckRes", 123)
+					uni.getStorage({
+						key: 'WeChatInfo',
+						success: function(res) {
+							that.WeChatInfo = res.data;
+						}
+					});
 					var parm = {
 						inter: "weChatAuth",
-						parm: `?phone=${that.formData.phone}&phoneCode=${that.formData.code}&openid=${that.WeChatInfo.openid}`
+						parm: `?phone=${that.formData.phone}&phoneCode=${that.formData.code}&openid=${that.WeChatInfo.wechat.openid}`
 					};
+					console.log("parm1111", parm)
 					if (that.token) {
-						parm['parm'] = `?token=${that.token}`
+						parm['parm'] = '';
+						parm['header'] = {
+							token: that.token
+						}
 					}
+					console.log("parm2222", parm)
 					parm["fun"] = function(res) {
-						console.log(res)
 						if (res.success) {
 							if (res.data.userError == false) {
 								uni.showToast({
@@ -105,6 +136,7 @@
 									icon: "none"
 								});
 							} else {
+								that.$store.state.UserInfo = res.data;
 								uni.setStorage({
 									key: 'UserInfo',
 									data: res.data,
@@ -215,25 +247,32 @@
 	}
 
 	.label {
-		font-size: 70rpx;
+		font-size: 45rpx;
 		color: #000;
 	}
 
 	.sub-label {
-		font-size: 42rpx;
+		font-size: 35rpx;
 		color: #848383;
 	}
 
 	.login-input {
 		padding: 10rpx;
-		border: 2rpx solid #eee;
+		border-bottom: 2rpx solid #eee;
 		display: flex;
 		justify-content: space-between;
 		flex-direction: row;
 		align-items: center;
 		align-content: center;
 		margin-bottom: 30rpx;
-		border-radius: 10rpx;
+	}
+
+	.input-left {
+		display: flex;
+		justify-content: flex-start;
+		flex-direction: row;
+		align-items: center;
+		align-content: center;
 	}
 
 	.phone-err {
@@ -242,8 +281,9 @@
 
 	.user-input {
 		line-height: 2;
-		font-size: 40rpx;
+		font-size: 34rpx;
 		color: #666;
+		padding: 0 10rpx;
 	}
 
 	.login-btns {
@@ -259,7 +299,7 @@
 		line-height: 2;
 		border: 2rpx solid #3a78ea;
 		color: #FFFFFF;
-		font-size: 50rpx;
+		font-size: 40rpx;
 		display: flex;
 		align-items: center;
 		align-content: center;
