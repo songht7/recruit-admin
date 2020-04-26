@@ -4,10 +4,10 @@
 			<view class="share-job-info">
 				<view class="jobview jobUser">
 					<view class="portrait">
-						<image v-if="shareConfig.userError" class="portrait-img" :src="shareConfig.userError.headimgurl" mode="aspectFit"></image>
+						<image v-if="shareConfig.wechat" class="portrait-img" :src="shareConfig.wechat.headimgurl" mode="aspectFit"></image>
 						<uni-icons v-else class="portrait-img" type="touxiang1" size="60" color="#fff"></uni-icons>
 					</view>
-					<view class="ju-name">{{shareConfig.userError?shareConfig.userError.nickname:"招聘专员"}}</view>
+					<view class="ju-name">{{shareConfig.wechat?shareConfig.wechat.nickname:"招聘专员"}}</view>
 				</view>
 				<view class="jobview">
 					<view class="j-t">

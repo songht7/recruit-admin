@@ -33,7 +33,8 @@ const store = new Vuex.Store({
 		WeChatInfo: {},
 		UserInfo: {},
 		isWeixin: false,
-		testToken: "7e085252b0fb8cdc86020f1c53ecabde44686a98",
+		testToken: "456ac381ab13c6828c52d5873f13d106805c05d6",
+		testOpenid: "oDb351dkZ8Boxmmu1ZAsr-sZmcV8",
 	},
 	mutations: {
 		switch_loading(state, status) {
@@ -223,6 +224,7 @@ const store = new Vuex.Store({
 		},
 		wxXCXAuth(ctx) {
 			console.log("--wxXCXAuth--")
+			// that.$store.state.systemInfo.platform
 			let redirect_uri = ctx.state.interface.domain;
 			let REDIRECT_URI = encodeURIComponent(redirect_uri), //授权后重定向的回调链接地址， 请使用 urlEncode 对链接进行处理
 				scope = "snsapi_userinfo", //snsapi_base，snsapi_userinfo （弹出授权页面，获取更多信息）

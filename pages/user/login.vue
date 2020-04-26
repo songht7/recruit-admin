@@ -49,7 +49,8 @@
 					code: ''
 				},
 				token: "",
-				WeChatInfo: {}
+				WeChatInfo: {},
+				openid: ''
 			}
 		},
 		onLoad() {
@@ -58,11 +59,13 @@
 		onShow() {
 			var that = this;
 			console.log("-------------")
+
 			uni.getStorage({
 				key: 'WeChatInfo',
 				success: function(res) {
 					console.log("onShow:", res.data)
 					that.WeChatInfo = res.data;
+					that.openid = res.data.wechat ? res.data.wechat.openid : res.data.userError.openid;
 					if (that.$store.state.UserInfo.id && that.WeChatInfo.wechat.openid) {
 						uni.redirectTo({
 							url: "/pages/user/index"
@@ -72,6 +75,11 @@
 				fail() {
 					if (that.$store.state.isWeixin) {
 						that.$store.dispatch("wxXCXAuth")
+					} else {
+						that.WeChatInfo['token'] = that.$store.state.testToken;
+						that.WeChatInfo['wechat'] = {
+							'openid': that.$store.state.testOpenid
+						};
 					}
 				}
 			});
@@ -102,27 +110,22 @@
 				];
 				let _formData = that.formData;
 				var checkRes = graceChecker.check(_formData, __rule);
-				console.log(that.formData, checkRes, that.token);
+				//console.log(that.formData, checkRes, that.token);
 				if (checkRes || that.token) {
-					console.log("checkRescheckRes", 123)
-					uni.getStorage({
-						key: 'WeChatInfo',
-						success: function(res) {
-							that.WeChatInfo = res.data;
-						}
-					});
+					var _openid = that.openid;
+					if (!that.$store.state.isWeixin) {
+						_openid = that.$store.state.testOpenid;
+					}
 					var parm = {
 						inter: "weChatAuth",
-						parm: `?phone=${that.formData.phone}&phoneCode=${that.formData.code}&openid=${that.WeChatInfo.wechat.openid}`
+						parm: `?phone=${that.formData.phone}&phoneCode=${that.formData.code}&openid=${_openid}`
 					};
-					console.log("parm1111", parm)
 					if (that.token) {
 						parm['parm'] = '';
 						parm['header'] = {
 							token: that.token
 						}
 					}
-					console.log("parm2222", parm)
 					parm["fun"] = function(res) {
 						if (res.success) {
 							if (res.data.userError == false) {

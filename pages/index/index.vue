@@ -6,7 +6,7 @@
 					<view class="job-li" @click="jobDetail(j.id)">
 						<view>
 							<view class="j-title">
-								{{j.name}}
+								{{j.name}} {{j.salary}}
 							</view>
 							<view class="j-ov">
 								{{j.district}} {{j.age_min}} {{j.type}}
@@ -20,9 +20,9 @@
 			</view>
 		</block>
 		<view class="job-btns">
-			<view class="job-add job-share" @click="jobShare">
+			<!-- <view class="job-add job-share" @click="jobShare">
 				分享职位
-			</view>
+			</view> -->
 			<view class="job-add" @click="addJob">
 				发布新职位
 			</view>
@@ -39,7 +39,7 @@
 				<img class="imgs share-job-imgs" v-if="newImg" :src="newImg" alt="">
 
 				<view class="share-sm">
-					<view class="close-btn" @click="togglePopup('')">返回</view>长按图片保存后分享
+					<view class="close-btn" @click="togglePopup('')">返回</view> 长按图片保存后分享
 				</view>
 			</view>
 		</uni-popup>
@@ -69,8 +69,8 @@
 		},
 		onLoad(option) {
 			var that = this;
-			that.$store.dispatch("cheack_user");
 			if (that.$store.state.isWeixin) {
+				that.$store.dispatch("cheack_user");
 				that.enterprise_id = that.$store.state.UserInfo.enterprise_id;
 			} else {
 				that.enterprise_id = 15 //test
@@ -80,6 +80,18 @@
 				enterprise_id: that.enterprise_id,
 				url: that.$store.state.webDomain + "/#/pages/company/index?enterprise_id=" + that.enterprise_id
 			}
+			uni.getStorage({
+				key: "UserInfo",
+				success: function(res) {
+					that.shareConfig = {
+						...that.shareConfig,
+						...res.data
+					};
+				},
+				fail() {
+					that.UserInfo = that.$store.state.UserInfo;
+				}
+			})
 		},
 		onShow() {
 			var that = this;
@@ -97,11 +109,15 @@
 		methods: {
 			getData(type) {
 				var that = this;
+				var _token = that.$store.state.UserInfo.token;
+				if (!that.$store.state.isWeixin) {
+					_token = that.$store.state.testToken
+				}
 				var parm = {
 					inter: "supports",
 					parm: `?enterprise_id=${that.enterprise_id}`,
 					header: {
-						token: that.$store.state.UserInfo.token
+						token: _token
 					}
 				};
 				parm["fun"] = function(res) {
@@ -155,6 +171,7 @@
 
 <style scoped>
 	@import "../../common/share.css";
+
 	.content {
 		padding: 90rpx 30rpx 30rpx;
 	}
@@ -175,17 +192,22 @@
 	}
 
 	.job-li::after {
-		content: ">";
+		content: "\e600";
+		font-family: "uniicons" !important;
+		font-size: 16px;
+		font-style: normal;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 		color: #AAAAAA;
 	}
 
 	.j-title {
-		font-size: 36rpx;
+		font-size: 32rpx;
 		color: #000000;
 	}
 
 	.j-ov {
-		font-size: 30rpx;
+		font-size: 28rpx;
 		color: #aaaaaa;
 	}
 
@@ -198,7 +220,7 @@
 		width: 90%;
 		position: fixed;
 		left: 5%;
-		bottom: 30rpx;
+		bottom: 20rpx;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -206,7 +228,7 @@
 	}
 
 	.job-add {
-		width: 47%;
+		width: 100%;
 		line-height: 2;
 		border-radius: 10rpx;
 		background: #007AFF;
@@ -219,5 +241,10 @@
 	.job-share {
 		background: none;
 		color: #007AFF;
+	}
+
+	.close-btn {
+		padding: 0 50rpx;
+		color: #666;
 	}
 </style>

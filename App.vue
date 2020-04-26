@@ -5,6 +5,7 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			this.$store.dispatch("getSystemInfo")
 		},
 		onShow: function() {
 			console.log('App Show')
@@ -17,21 +18,14 @@
 						let _deathline = res.data.deathline;
 						let timestamp = Math.round(new Date().getTime() / 1000);
 						if (!_deathline || timestamp >= _deathline) {
-							uni.removeStorage({
-								key: "WeChatInfo"
-							});
-							uni.removeStorage({
-								key: "UserInfo"
-							});
-							that.$store.state.WeChatInfo = {};
-							that.$store.state.UserInfo = {};
-							window.location.href = that.$store.state.interface.domain;
+							that.$store.dispatch("logout")
 							//that.$store.dispatch("wxXCXAuth")
 						} else {
 							that.$store.state.WeChatInfo = res.data;
 						}
 					},
 					fail() {
+						//that.$store.dispatch("logout")
 						//that.$store.dispatch("wxXCXAuth")
 					}
 				})
