@@ -43,7 +43,7 @@
 			</view>
 			<view class="uni-form-item uni-column job-new-row">
 				<view class="title">职位描述</view>
-				<textarea class="uni-input" v-model="formData['overview']" auto-height placeholder="" />
+				<textarea class="uni-input" v-model="formData['overview']" auto-height placeholder="职位描述" />
 				<!-- <input class="uni-input" name="input" placeholder="职位描述" v-model="formData['overview']" /> -->
 			</view>
 			<view class="uni-form-item uni-column job-new-row">

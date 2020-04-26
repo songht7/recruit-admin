@@ -39,12 +39,63 @@
 				</view>
 			</view>
 		</view>
-		<view class="job-box">
-			<view class="j-left"><text class="j-total">{{jobTotal}}</text>个在线职位</view>
-			<view class="j-right" @click="jobAction">职位管理</view>
+		<view class="job-block-wrapper">
+			<view class="job-box">
+				<view class="j-left"><text class="j-total">{{jobTotal}}</text>个在线职位</view>
+				<view class="j-right" @click="jobAction">职位管理</view>
+			</view>
+			<view class="job-block-row">
+				<view class="j-block">
+					<text class="j-label">导出简历</text>
+					<uni-icons type="daochu" :size="18" color="#595656"></uni-icons>
+				</view>
+				<view class="j-block">
+					<text class="j-label">导出名单</text>
+					<uni-icons type="mingdandaochu" :size="18" color="#595656"></uni-icons>
+				</view>
+				<view class="j-block" @click="jobShare">
+					<text class="j-label">职位分享</text>
+					<uni-icons type="fenxiangjiantouxianxing" :size="18" color="#595656"></uni-icons>
+				</view>
+			</view>
 		</view>
-		<view class="job-block-row">
-			<view class="j-block" @click="jobShare">职位分享<uni-icons type="fenxiang1" :size="18" color="#595656"></uni-icons>
+		<view class="job-block-wrapper">
+			<view class="job-block-row">
+				<view class="j-block-action">
+					<view class="act-icon">
+						<uni-icons type="shuju" :size="20" color="#fff"></uni-icons>
+					</view>
+					<view class="act-label">招聘数据</view>
+				</view>
+				<view class="j-block-action">
+					<view class="act-icon">
+						<uni-icons type="mingpian1" :size="20" color="#fff"></uni-icons>
+					</view>
+					<view class="act-label">个人主页</view>
+				</view>
+				<view class="j-block-action">
+					<view class="act-icon">
+						<uni-icons type="daoju" :size="20" color="#fff"></uni-icons>
+					</view>
+					<view class="act-label">招聘道具</view>
+				</view>
+				<view class="j-block-action">
+					<view class="act-icon">
+						<uni-icons type="xunzhang_" :size="20" color="#fff"></uni-icons>
+					</view>
+					<view class="act-label">我的勋章</view>
+				</view>
+			</view>
+		</view>
+		<view class="job-block-wrapper">
+			<view class="job-block-row customer-box">
+				<view class="customer-row">
+					<view class="cst-left">
+						<uni-icons type="kefu" :size="24" color="#656262"></uni-icons>
+						<text class="ctm-label">我的客服</text>
+					</view>
+					<uni-icons type="jiantou1" :size="24" color="#656262"></uni-icons>
+				</view>
 			</view>
 		</view>
 		<!-- 	<tab-bar></tab-bar> -->
@@ -268,6 +319,23 @@
 		align-content: center;
 		color: #FFFFFF;
 		font-size: 35rpx;
+		position: relative;
+		width: 25%;
+	}
+
+	.count-block::after {
+		content: "";
+		width: 1px;
+		overflow: hidden;
+		position: absolute;
+		background-color: rgba(154, 196, 249, 0.5);
+		height: 60%;
+		top: 20%;
+		right: 0;
+	}
+
+	.count-block:last-child:after {
+		width: 0;
 	}
 
 	.count-numb {
@@ -275,7 +343,7 @@
 	}
 
 	.count-label {
-		font-size: 30rpx;
+		font-size: 28rpx;
 	}
 
 	.job-box {
@@ -309,14 +377,39 @@
 		color: #AAAAAA;
 	}
 
+	.job-block-wrapper {
+		border-bottom: 20rpx solid #f5f5f6;
+	}
+
 	.job-block-row {
 		padding: 15px 30rpx 30rpx;
 		display: flex;
 		flex-direction: row;
-		justify-content: flex-end;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.customer-box {
+		justify-content: flex-start;
+	}
+
+	.customer-row {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		flex-direction: row;
+		align-items: center;
+		align-content: center;
+	}
+
+	.ctm-label {
+		padding: 0 15rpx;
+		color: #595757;
+		font-size: 32rpx;
 	}
 
 	.j-block {
+		width: 33.3%;
 		font-size: 30rpx;
 		color: #595757;
 		display: flex;
@@ -324,13 +417,46 @@
 		align-content: center;
 		flex-direction: row;
 		align-items: center;
+		border-right: 1rpx solid #f3f1ef;
+	}
+
+	.j-block:last-child {
+		border-right: none;
 	}
 
 	.close-btn {
 		padding: 0 50rpx;
 		color: #666;
 	}
-	.j-total{
+
+	.j-label {
+		padding: 0 10rpx;
+		font-size: 32rpx;
+		color: #595757;
+	}
+
+	.j-total {
 		font-size: 38rpx;
+	}
+
+	.j-block-action {
+		width: 25%;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		align-items: center;
+		align-content: center;
+	}
+
+	.act-icon {
+		background-image: linear-gradient(to bottom right, #77baed, #257df2);
+		background-image: -webkit-linear-gradient(to bottom right, #77baed, #257df2);
+		padding: 15rpx;
+		border-radius: 20rpx;
+		display: flex;
+		align-items: center;
+		align-content: center;
+		justify-content: center;
+		margin-bottom: 10rpx;
 	}
 </style>
