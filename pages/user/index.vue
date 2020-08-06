@@ -22,7 +22,7 @@
 			</view>
 			<view class="reume-count">
 				<view class="count-block">
-					<view class="count-numb">0</view>
+					<view class="count-numb">{{resumedTotal}}</view>
 					<view class="count-label">简历</view>
 				</view>
 				<view class="count-block">
@@ -45,7 +45,7 @@
 				<view class="j-right" @click="jobAction">职位管理</view>
 			</view>
 			<view class="job-block-row">
-				<view class="j-block">
+				<view class="j-block" @click="resumeds">
 					<text class="j-label">导出简历</text>
 					<uni-icons type="daochu" :size="18" color="#595656"></uni-icons>
 				</view>
@@ -132,7 +132,8 @@
 				shareConfig: {},
 				WeChatInfo: {},
 				UserInfo: {},
-				jobTotal: 0
+				jobTotal: 0,
+				resumedTotal: 0,
 			}
 		},
 		components: {
@@ -142,6 +143,7 @@
 		onLoad() {
 			var that = this;
 			that.getData('supports');
+			that.getData('resumeds');
 		},
 		onShow() {
 			var that = this;
@@ -196,19 +198,35 @@
 				}
 				var parm = {
 					inter: inter,
-					parm: `?enterprise_id=${that.enterprise_id}`,
 					header: {
 						token: _token
 					}
 				};
-				parm["fun"] = function(res) {
-					console.log(res)
-					if (res.success) {
-						that.jobTotal = res.data.total;
-					} else {
-						that.jobTotal = 0;
-					}
-				};
+				switch (inter) {
+					case 'supports':
+						parm["parm"] = `?enterprise_id=${that.enterprise_id}`;
+						parm["fun"] = function(res) {
+							console.log(res)
+							if (res.success) {
+								that.jobTotal = res.data.total;
+							} else {
+								that.jobTotal = 0;
+							}
+						};
+						break;
+					case 'resumeds':
+						parm["fun"] = function(res) {
+							console.log(res)
+							if (res.success) {
+								that.resumedTotal = res.data.total;
+							} else {
+								that.resumedTotal = 0;
+							}
+						};
+						break;
+					default:
+						break;
+				}
 				that.$store.dispatch("getData", parm)
 			},
 			userBinding() {
@@ -219,6 +237,11 @@
 			jobAction() {
 				uni.navigateTo({
 					url: '/pages/index/index'
+				});
+			},
+			resumeds() {
+				uni.navigateTo({
+					url: '/pages/resumeds/index'
 				});
 			},
 			togglePopup(type) {
