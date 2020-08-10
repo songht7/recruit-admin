@@ -233,7 +233,7 @@
 		color: #f17f5a;
 	}
 
-	.selBtn:last-child()::after {
+	.selBtn:last-child:after {
 		width: 0;
 		background: none;
 	}

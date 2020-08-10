@@ -3,26 +3,26 @@
 		<block>
 			<view class="r-main">
 				<block v-for="(j,k) in list" :key="k">
-					<view class="r-tag">
+					<!-- 	<view class="r-tag">
 						运营职位专员
-					</view>
+					</view> -->
 					<view class="r-li" @click="rDetail(j.id)">
 						<view class="r-box">
 							<view class="r-val">
 								<view class="r-top">
 									<view class="portrait">
-										<image v-if="portrait" class="portrait-img" :src="portrait" mode="aspectFit"></image>
+										<image v-if="j.photo" class="portrait-img" :src="j.photo" mode="aspectFit"></image>
 										<image v-else class="portrait-img" src="/static/logo.png" mode="aspectFit"></image>
 									</view>
 									<view class="j-title">
-										{{j.name}} {{j.salary}}
+										{{j.name}} - {{j.aName}} - {{j.eName}}
 									</view>
 								</view>
 								<view class="j-ov">
 									{{j.district}} {{j.age_min}} {{j.type}}
 								</view>
 								<view class="j-time">
-									2020-8-6
+									{{j.add_time.split(' ')[0]}}
 								</view>
 							</view>
 						</view>
@@ -45,6 +45,7 @@
 				user_id: "",
 				portrait: "",
 				enterprise_id: "",
+				resumedTotal: 0,
 			}
 		},
 		components: {
@@ -65,6 +66,7 @@
 					that.UserInfo = that.$store.state.UserInfo;
 				}
 			})
+			that.getData('resumeds');
 		},
 		onShow() {
 			var that = this;
@@ -76,25 +78,44 @@
 			var that = this;
 		},
 		methods: {
-			getData(type) {
+			getData(inter, type) {
 				var that = this;
 				var _token = that.$store.state.UserInfo.token;
 				if (!that.$store.state.isWeixin) {
 					_token = that.$store.state.testToken
 				}
 				var parm = {
-					inter: "supports",
-					parm: `?enterprise_id=${that.enterprise_id}`,
+					inter: inter,
 					header: {
 						token: _token
 					}
 				};
-				parm["fun"] = function(res) {
-					console.log(res)
-					if (res.success) {
-						that.list = res.data.list;
-					} else {}
-				};
+				switch (inter) {
+					case 'supports':
+						parm["parm"] = `?enterprise_id=${that.enterprise_id}`;
+						parm["fun"] = function(res) {
+							console.log(res)
+							if (res.success) {
+								that.jobTotal = res.data.total;
+							} else {
+								that.jobTotal = 0;
+							}
+						};
+						break;
+					case 'resumeds':
+						parm["fun"] = function(res) {
+							console.log(res)
+							if (res.success) {
+								that.list = res.data.list;
+								that.resumedTotal = res.data.total;
+							} else {
+								that.resumedTotal = 0;
+							}
+						};
+						break;
+					default:
+						break;
+				}
 				that.$store.dispatch("getData", parm)
 			},
 			rDetail(id) {
@@ -127,6 +148,7 @@
 
 	.r-box {
 		margin: 0 5%;
+		padding: 10upx 0;
 		width: 90%;
 	}
 

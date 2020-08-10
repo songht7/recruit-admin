@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import tab_bar from "./modules/tab_bar.js"
 import common from "../common.js"
-// #ifdef MP-WEIXIN
-var jweixin = require('jweixin-module')
-// #endif
+//#ifdef MP-WEIXIN
+var wx = require('jweixin-module')
+//#endif
 Vue.use(Vuex)
 
 
@@ -33,8 +33,8 @@ const store = new Vuex.Store({
 		WeChatInfo: {},
 		UserInfo: {},
 		isWeixin: false,
-		testToken: "456ac381ab13c6828c52d5873f13d106805c05d6",
-		testOpenid: "oDb351dkZ8Boxmmu1ZAsr-sZmcV8",
+		testToken: common.Interface.testToken,
+		testOpenid: common.Interface.testOpenid,
 	},
 	mutations: {
 		switch_loading(state, status) {
@@ -184,7 +184,7 @@ const store = new Vuex.Store({
 						'onMenuShareQQ'
 					]
 				}
-				jweixin.config(_config);
+				wx.config(_config);
 			};
 			let wx_ticket = ctx.dispatch("getData", parm)
 
@@ -195,16 +195,16 @@ const store = new Vuex.Store({
 				imgUrl: shareData.imgUrl,
 				success: function() {}
 			};
-			jweixin.ready(function() {
+			wx.ready(function() {
 				//wx.updateAppMessageShareData(wxSet);
 				//wx.updateTimelineShareData(wxSet);
 				// 2. 分享接口
 				// 2.1 监听“分享给朋友”，按钮点击、自定义分享内容及分享结果接口
-				jweixin.onMenuShareAppMessage(wxSet);
+				wx.onMenuShareAppMessage(wxSet);
 				// 2.2 监听“分享到朋友圈”按钮点击、自定义分享内容及分享结果接口
-				jweixin.onMenuShareTimeline(wxSet);
+				wx.onMenuShareTimeline(wxSet);
 				// 2.3 监听“分享到QQ”按钮点击、自定义分享内容及分享结果接口
-				jweixin.onMenuShareQQ(wxSet);
+				wx.onMenuShareQQ(wxSet);
 			});
 		},
 		goback(ctx, url) {

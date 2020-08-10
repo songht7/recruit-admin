@@ -50,6 +50,8 @@ export default {
 		"appName": api[lks]["appName"],
 		"phoneNumber": api[lks]["phoneNumber"],
 		"wxConfig": api[lks]["wx"],
+		"testToken": "a5e2cac63b16354f34f4cc631751f61eea7d2d71",
+		"testOpenid": "oDb351dkZ8Boxmmu1ZAsr-sZmcV8",
 		"addr": {
 			"getRegion": "/v2/ApiEnum-getRegion.htm", //获取中国地区的接口
 			"screening": "/v4/ApiBase-screening.htm", //筛选条件列表
