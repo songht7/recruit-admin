@@ -3,23 +3,28 @@
 		<view class="job-header">
 			<view class="job-val">
 				<view class="job-title">{{detail.name}}</view>
-				<view class="job-price">{{detail.salary}}</view>
+				<!-- <view class="job-price">{{detail.salary}}</view> -->
+				<view class="job-price">
+					<view class="portrait">
+						<image class="portrait-img" :src="portrait?portrait:'../../static/logo.png'" mode="aspectFit"></image>
+						<view :class="['sex',detail.sex==0?'sex-male':'sex-female']" v-if="detail.sex"></view>
+					</view>
+				</view>
 			</view>
 			<view class="job-tags">
-				<!-- <view class="tag email">{{detail.email}}</view> -->
+				<view class="tag age_work" v-if="detail.age_work">{{detail.age_work}}</view>
 				<view class="tag boshimao1" v-if="detail.education">{{detail.education}}</view>
 				<view class="tag shengri">{{detail.brithday}}</view>
 			</view>
 		</view>
-		<view class="manager">
+		<!-- 	<view class="manager">
 			<view class="portrait">
 				<image class="portrait-img" :src="portrait?portrait:'../../static/logo.png'" mode="aspectFit"></image>
 			</view>
 			<view class="manager-info">
 				<view class="manager-name">{{detail.eName}}</view>
-				<!-- <view class="manager-post">SIXECO HR</view> -->
 			</view>
-		</view>
+		</view> -->
 		<view class="detail">
 			<rich-text class="job-detail" :nodes="detail.about_self?detail.about_self:''"></rich-text>
 		</view>
@@ -238,6 +243,10 @@
 		content: "\e61f";
 	}
 
+	.age_work:before {
+		content: "\e702";
+	}
+
 	.manager {
 		padding: 0 0 30rpx;
 		border-bottom: 2rpx solid #e2e2e2;
@@ -250,12 +259,43 @@
 		width: 120rpx;
 		height: 120rpx;
 		border-radius: 50%;
-		overflow: hidden;
+		position: relative;
 	}
 
 	.portrait-img {
 		width: 100%;
 		height: 100%;
+	}
+
+	.sex {
+		position: absolute;
+		z-index: 1;
+		width: 40upx;
+		height: 40upx;
+		border-radius: 50%;
+		background-color: #1677f2;
+		top: 0;
+		right: 0;
+	}
+
+	.sex::before {
+		font-family: "uniicons" !important;
+		content: "\e641";
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		align-content: center;
+		color: #FFFFFF;
+		font-size: 20upx;
+	}
+
+	.sex-female {
+		background-color: #ea575a;
+	}
+
+	.sex-female::before {
+		content: "\e633";
 	}
 
 	.manager-info {
@@ -296,10 +336,12 @@
 	}
 
 	.dtl-list {
+		padding: 20upx 0;
 		border-bottom: 2upx dashed #e8e6e2;
 	}
 
 	.dtl-list:last-child {
+		padding-bottom: 0;
 		border-bottom: none;
 	}
 
@@ -320,7 +362,7 @@
 	}
 
 	.dtl-tl .time {
-		font-size: 28upx;
+		font-size: 24upx;
 		color: #aaaaaa;
 	}
 </style>

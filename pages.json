@@ -84,24 +84,24 @@
 			"style": {
 				"navigationBarTitleText": "简历列表",
 				// "enablePullDownRefresh": true,
-				"navigationStyle": "custom"
-				// ,"app-plus": {
-				// 	"titleNView": {
-				// 		"type": "transparent"
-				// 	}
-				// }
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
 			}
 		}, {
 			"path": "pages/resumeds/detail",
 			"style": {
 				"navigationBarTitleText": "简历详细",
 				// "enablePullDownRefresh": true,
-				"navigationStyle": "custom"
-				// ,"app-plus": {
-				// 	"titleNView": {
-				// 		"type": "transparent"
-				// 	}
-				// }
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
 			}
 		}
 	],

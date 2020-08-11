@@ -46,7 +46,10 @@
 			</view>
 			<view class="job-block-row">
 				<view class="j-block" @click="resumeds">
-					<text class="j-label">导出简历[{{resumedTotal}}]</text>
+					<text class="j-label">
+						导出简历
+						<!-- [{{resumedTotal}}] -->
+					</text>
 					<uni-icons type="daochu" :size="18" color="#595656"></uni-icons>
 				</view>
 				<view class="j-block">

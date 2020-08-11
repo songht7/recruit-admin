@@ -6,16 +6,22 @@
 					<!-- 	<view class="r-tag">
 						运营职位专员
 					</view> -->
-					<view class="r-li" @click="rDetail(j.id)">
+					<view class="r-li" @click="rDetail(j.user_id)">
 						<view class="r-box">
 							<view class="r-val">
 								<view class="r-top">
 									<view class="portrait">
 										<image v-if="j.photo" class="portrait-img" :src="j.photo" mode="aspectFit"></image>
 										<image v-else class="portrait-img" src="/static/logo.png" mode="aspectFit"></image>
+										<view :class="['sex',j.sex==0?'sex-male':'sex-female']" v-if="j.sex"></view>
 									</view>
-									<view class="j-title">
-										{{j.name}} - {{j.aName}} - {{j.eName}}
+									<view class="">
+										<view class="j-title">
+											{{j.name}} {{j.education?j.education:''}}
+										</view>
+										<view class="j-title">
+											{{j.aName}}
+										</view>
 									</view>
 								</view>
 								<view class="j-ov">
@@ -164,7 +170,8 @@
 		width: 120rpx;
 		height: 120rpx;
 		border-radius: 50%;
-		overflow: hidden;
+		position: relative;
+		margin-right: 25upx;
 	}
 
 	.portrait-img {
@@ -172,7 +179,40 @@
 		height: 100%;
 	}
 
+	.sex {
+		position: absolute;
+		z-index: 1;
+		width: 40upx;
+		height: 40upx;
+		border-radius: 50%;
+		background-color: #1677f2;
+		top: 0;
+		right: 0;
+	}
+
+	.sex::before {
+		font-family: "uniicons" !important;
+		content: "\e641";
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		align-content: center;
+		color: #FFFFFF;
+		font-size: 20upx;
+	}
+
+	.sex-female {
+		background-color: #ea575a;
+	}
+
+	.sex-female::before {
+		content: "\e633";
+	}
+
 	.j-ov {
+		padding: 20upx 0;
+		margin-bottom: 10upx;
 		border-bottom: 2upx solid #eaeaea;
 	}
 </style>

@@ -58,8 +58,9 @@
 		},
 		onShow() {
 			var that = this;
-			console.log("-------------")
-
+		},
+		onReady() {
+			var that = this;
 			uni.getStorage({
 				key: 'WeChatInfo',
 				success: function(res) {
@@ -93,9 +94,6 @@
 					}
 				}
 			});
-		},
-		onReady() {
-			var that = this;
 		},
 		methods: {
 			login(val) {
